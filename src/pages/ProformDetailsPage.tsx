@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { formatMoneyAmount } from "@/lib/utils/numberFormat";
 import { getProformStatusBadgeClassName, getProformStatusLabel } from "@/lib/utils/proformStatus";
 import { useProformDetailsPage } from "@/hooks/pages/proforms/useProformDetailsPage";
 
@@ -228,7 +229,7 @@ export function ProformDetailsPage() {
                         </div>
                         <div className="mt-1 font-medium text-slate-900">
                           {currencySymbol}
-                          {item.unitPrice.toFixed(2)}
+                          {formatMoneyAmount(item.unitPrice)}
                         </div>
                       </div>
 
@@ -238,7 +239,7 @@ export function ProformDetailsPage() {
                         </div>
                         <div className="mt-1 font-semibold text-slate-900">
                           {currencySymbol}
-                          {item.total.toFixed(2)}
+                          {formatMoneyAmount(item.total)}
                         </div>
                       </div>
                     </div>
@@ -259,7 +260,7 @@ export function ProformDetailsPage() {
                 <span className="text-slate-600">{t("common.finance.subtotal")}</span>
                 <span className="font-medium text-slate-900">
                   {currencySymbol}
-                  {proform.subtotal.toFixed(2)}
+                  {formatMoneyAmount(proform.subtotal)}
                 </span>
               </div>
 
@@ -269,7 +270,7 @@ export function ProformDetailsPage() {
                 </span>
                 <span className="font-medium text-slate-900">
                   {currencySymbol}
-                  {proform.taxAmount.toFixed(2)}
+                  {formatMoneyAmount(proform.taxAmount)}
                 </span>
               </div>
 
@@ -277,7 +278,7 @@ export function ProformDetailsPage() {
                 <span>{t("common.finance.total")}</span>
                 <span>
                   {currencySymbol}
-                  {proform.total.toFixed(2)}
+                  {formatMoneyAmount(proform.total)}
                 </span>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { formatMoneyAmount } from "@/lib/utils/numberFormat";
 import { getProformStatusBadgeClassName, getProformStatusLabel } from "@/lib/utils/proformStatus";
 import { useProformsListPage } from "@/hooks/pages/proforms/useProformsListPage";
 
@@ -13,10 +14,6 @@ function formatDate(value: string, locale: string): string {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
-}
-
-function formatMoney(value: number | null | undefined): string {
-  return (value ?? 0).toFixed(2);
 }
 
 function formatPercent(value: number | null | undefined): string {
@@ -205,7 +202,7 @@ export function ProformsListPage() {
                     <span className="text-slate-500">{t("common.finance.subtotal")}</span>
                     <span className="font-medium text-slate-800">
                       {currencySymbol}
-                      {formatMoney(proform.subtotal)}
+                      {formatMoneyAmount(proform.subtotal)}
                     </span>
                   </div>
 
@@ -215,7 +212,7 @@ export function ProformsListPage() {
                     </span>
                     <span className="font-medium text-slate-800">
                       {currencySymbol}
-                      {formatMoney(proform.taxAmount)}
+                      {formatMoneyAmount(proform.taxAmount)}
                     </span>
                   </div>
 
@@ -223,7 +220,7 @@ export function ProformsListPage() {
                     <span>{t("common.finance.total")}</span>
                     <span>
                       {currencySymbol}
-                      {formatMoney(proform.total)}
+                      {formatMoneyAmount(proform.total)}
                     </span>
                   </div>
                 </div>

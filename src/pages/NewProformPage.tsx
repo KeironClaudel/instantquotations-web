@@ -1,4 +1,5 @@
 import { calculateLineTotal } from "@/lib/utils/proformCalculations";
+import { formatMoneyAmount } from "@/lib/utils/numberFormat";
 import { useTranslation } from "react-i18next";
 import { getProformStatusBadgeClassName, getProformStatusLabel } from "@/lib/utils/proformStatus";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -188,7 +189,7 @@ const textareaClassName =
                     <label className="mb-1 block text-sm font-medium">{t("pages.newProform.lineTotal")}</label>
                     <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-700">
                       {companySettings?.currencySymbol ?? "₡"}
-                      {calculateLineTotal(item.quantity, item.unitPrice).toFixed(2)}
+                      {formatMoneyAmount(calculateLineTotal(item.quantity, item.unitPrice))}
                     </div>
                   </div>
                 </div>
@@ -207,7 +208,7 @@ const textareaClassName =
               <span>{t("common.finance.subtotal")}</span>
               <span>
                 {companySettings?.currencySymbol ?? "₡"}
-                {subtotal.toFixed(2)}
+                {formatMoneyAmount(subtotal)}
               </span>
             </div>
 
@@ -217,7 +218,7 @@ const textareaClassName =
               </span>
               <span>
                 {companySettings?.currencySymbol ?? "₡"}
-                {taxAmount.toFixed(2)}
+                {formatMoneyAmount(taxAmount)}
               </span>
             </div>
 
@@ -225,7 +226,7 @@ const textareaClassName =
               <span>{t("common.finance.total")}</span>
               <span>
                 {companySettings?.currencySymbol ?? "₡"}
-                {total.toFixed(2)}
+                {formatMoneyAmount(total)}
               </span>
             </div>
           </div>
@@ -299,7 +300,7 @@ const textareaClassName =
                   <div className="text-xs uppercase tracking-wide text-slate-500">{t("common.finance.total")}</div>
                   <div className="mt-1 text-2xl font-semibold text-slate-900">
                     {companySettings?.currencySymbol ?? "₡"}
-                    {createdProform.total.toFixed(2)}
+                    {formatMoneyAmount(createdProform.total)}
                   </div>
                 </div>
               </div>
@@ -309,7 +310,7 @@ const textareaClassName =
                   <div className="text-slate-500">{t("common.finance.subtotal")}</div>
                   <div className="mt-1 font-semibold text-slate-900">
                     {companySettings?.currencySymbol ?? "₡"}
-                    {createdProform.subtotal.toFixed(2)}
+                    {formatMoneyAmount(createdProform.subtotal)}
                   </div>
                 </div>
 
@@ -319,7 +320,7 @@ const textareaClassName =
                   </div>
                   <div className="mt-1 font-semibold text-slate-900">
                     {companySettings?.currencySymbol ?? "₡"}
-                    {createdProform.taxAmount.toFixed(2)}
+                    {formatMoneyAmount(createdProform.taxAmount)}
                   </div>
                 </div>
 
@@ -327,7 +328,7 @@ const textareaClassName =
                   <div className="text-slate-500">{t("common.finance.finalTotal")}</div>
                   <div className="mt-1 font-semibold text-slate-900">
                     {companySettings?.currencySymbol ?? "₡"}
-                    {createdProform.total.toFixed(2)}
+                    {formatMoneyAmount(createdProform.total)}
                   </div>
                 </div>
               </div>
