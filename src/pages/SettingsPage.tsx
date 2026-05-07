@@ -155,15 +155,6 @@ export function SettingsPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.proformPrefix")}</label>
-                <input
-                  className={inputClassName}
-                  value={form.proformPrefix}
-                  onChange={(event) => updateField("proformPrefix", event.target.value)}
-                />
-              </div>
-
-              <div>
                 <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.taxPercentage")}</label>
                 <input
                   type="number"
@@ -262,7 +253,7 @@ export function SettingsPage() {
                 style={{ backgroundColor: previewStyles.primaryColor }}
               >
                 <div className="text-sm uppercase tracking-wide text-white/80">
-                  {previewStyles.prefix}-000001
+                  {previewStyles.numberPreview}
                 </div>
 
                 <div className="mt-2 text-xl font-semibold">

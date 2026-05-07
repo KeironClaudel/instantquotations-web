@@ -12,10 +12,8 @@ export function OnboardingCompanyPage() {
     handleSubmit,
     isSubmitting,
     preview,
-    proformPrefix,
     setCurrencySymbol,
     setDisplayName,
-    setProformPrefix,
     setTaxLabel,
     setTaxPercentage,
     shouldRedirect,
@@ -68,17 +66,6 @@ export function OnboardingCompanyPage() {
                 value={displayName}
                 onChange={(event) => setDisplayName(event.target.value)}
                 placeholder="Ecotech CR"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.proformPrefix")}</label>
-              <input
-                className={inputClassName}
-                value={proformPrefix}
-                onChange={(event) => setProformPrefix(event.target.value)}
-                placeholder="PRO"
                 required
               />
             </div>
@@ -162,7 +149,7 @@ export function OnboardingCompanyPage() {
           <div className="mt-5 rounded-3xl bg-slate-100 p-4">
             <div className="rounded-3xl bg-slate-900 p-5 text-white">
               <div className="text-xs uppercase tracking-wide text-white/70">
-                {preview.prefix}-000001
+                {preview.numberPreview}
               </div>
 
               <div className="mt-2 text-2xl font-semibold">{preview.displayName}</div>

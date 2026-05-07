@@ -54,8 +54,8 @@ export function DashboardPage() {
     currencySymbol,
     isSetupComplete,
     logoUrl,
+    nextNumberPreview,
     phone,
-    prefix,
     primaryColor,
     taxLabel,
     taxPercentage,
@@ -178,7 +178,11 @@ export function DashboardPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <InfoCard title={t("components.appShell.prefix")} value={prefix} helper={t("pages.dashboard.prefixHelper")} />
+              <InfoCard
+                title={t("pages.dashboard.nextProformNumber")}
+                value={nextNumberPreview}
+                helper={t("pages.dashboard.nextProformNumberHelper")}
+              />
               <InfoCard title={t("common.finance.tax")} value={taxPercentage} helper={t("pages.dashboard.taxHelper", { label: taxLabel })} />
               <InfoCard title={t("common.finance.currency")} value={currencySymbol} helper={t("pages.dashboard.currencyHelper")} />
               <InfoCard title={t("common.labels.website")} value={website} />
@@ -229,7 +233,7 @@ export function DashboardPage() {
 
                   <div>
                     <div className="text-xs uppercase tracking-wide text-white/70">
-                      {prefix}-000001
+                      {nextNumberPreview}
                     </div>
                     <div className="mt-1 text-xl font-semibold">{companyName}</div>
                   </div>

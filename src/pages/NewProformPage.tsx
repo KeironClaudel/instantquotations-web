@@ -290,12 +290,6 @@ const textareaClassName =
                     </span>
 
                     <span className="rounded-full bg-white px-3 py-1 font-medium text-slate-700">
-                      {t("pages.newProform.prefixLabel", {
-                        prefix: companySettings?.proformPrefix ?? "-",
-                      })}
-                    </span>
-
-                    <span className="rounded-full bg-white px-3 py-1 font-medium text-slate-700">
                       {t("pages.newProform.taxLabel", { tax: createdProform.taxPercentage })}
                     </span>
                   </div>

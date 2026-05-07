@@ -55,9 +55,6 @@ export function AppShell() {
 
               <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
                 <span className="rounded-full bg-slate-100 px-2 py-1">
-                  {t("components.appShell.prefix")}: {companySettings?.proformPrefix ?? "-"}
-                </span>
-                <span className="rounded-full bg-slate-100 px-2 py-1">
                   {t("components.appShell.tax")}: {companySettings?.taxPercentage ?? 0}%
                 </span>
               </div>

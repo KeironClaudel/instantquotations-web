@@ -129,7 +129,7 @@ export const es = {
         "Completa los campos esenciales de la empresa para trabajar con mas fluidez.",
       reviewBranding: "Revisar imagen",
       reviewBrandingDescription:
-        "Verifica colores, prefijo, logo y una vista previa del espacio de trabajo.",
+        "Verifica colores, logo y una vista previa del espacio de trabajo.",
       latestSettingsSnapshot: "Resumen de configuracion actual",
       latestSettingsSnapshotDescription:
         "Una vista rapida de la configuracion actual de la empresa.",
@@ -144,7 +144,8 @@ export const es = {
       finishSetupCta: "Completar configuracion de empresa",
       finishSetupCtaDescription:
         "Completa la informacion basica para que las proformas sean consistentes y listas para produccion.",
-      prefixHelper: "Se usa para numerar proformas.",
+      nextProformNumber: "Siguiente numero de proforma",
+      nextProformNumberHelper: "Vista previa de la numeracion automatica por ano.",
       taxHelper: "{{label}} configurado por empresa.",
       currencyHelper: "Se muestra en totales y resumenes.",
       logoUploaded: "Cargado",
@@ -199,7 +200,6 @@ export const es = {
         "Completa el formulario para generar una proforma y desbloquear descarga PDF, enlace para compartir y envio por correo.",
       proformCreated: "Proforma creada",
       statusPrefix: "Estado: {{status}}",
-      prefixLabel: "Prefijo: {{prefix}}",
       taxLabel: "Impuesto: {{tax}}%",
       proformActions: "Acciones de la proforma",
       proformActionsDescription: "Descarga, comparte o envia la proforma generada.",
@@ -248,7 +248,6 @@ export const es = {
       businessEssentials: "Datos esenciales",
       businessEssentialsDescription:
         "Estos valores apareceran en tus proformas y calculos.",
-      proformPrefix: "Prefijo de proforma",
       taxPercentage: "Porcentaje de impuesto",
       currencySymbol: "Simbolo de moneda",
       taxLabel: "Etiqueta de impuesto",
@@ -260,7 +259,6 @@ export const es = {
         "Esto te da una idea rapida de como se vera la identidad de tu empresa.",
       feedback: {
         displayNameRequired: "El nombre visible es obligatorio.",
-        prefixRequired: "El prefijo de proforma es obligatorio.",
         currencyRequired: "El simbolo de moneda es obligatorio.",
         taxRange: "El porcentaje de impuesto debe estar entre 0 y 100.",
         success: "La configuracion de la empresa se completo correctamente.",
@@ -390,7 +388,6 @@ export const es = {
       primaryColor: "Color primario",
       secondaryColor: "Color secundario",
       accentColor: "Color de acento",
-      proformPrefix: "Prefijo de proforma",
       taxPercentage: "Porcentaje de impuesto",
       currencySymbol: "Simbolo de moneda",
       taxLabel: "Etiqueta de impuesto",

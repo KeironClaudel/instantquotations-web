@@ -5,6 +5,7 @@ import { useAuth } from "@/app/providers/useAuth";
 import { replaceCompanyLogo, updateCompanySettings } from "@/lib/api/companySettingsApi";
 import { isCompanySetupComplete } from "@/lib/utils/companySetup";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
+import { getProformSeriesPreview } from "@/lib/utils/proformNumber";
 
 type FeedbackState = {
   type: "success" | "error";
@@ -17,7 +18,6 @@ export function useOnboardingCompanyPage() {
   const { companySettings, refreshCompanySettings, isLoading } = useAuth();
 
   const [displayName, setDisplayName] = useState(companySettings?.displayName ?? "");
-  const [proformPrefix, setProformPrefix] = useState(companySettings?.proformPrefix ?? "PRO");
   const [taxPercentage, setTaxPercentage] = useState(String(companySettings?.taxPercentage ?? 13));
   const [currencySymbol, setCurrencySymbol] = useState(companySettings?.currencySymbol ?? "₡");
   const [taxLabel, setTaxLabel] = useState(companySettings?.taxLabel ?? t("common.defaults.taxLabel"));
@@ -33,7 +33,6 @@ export function useOnboardingCompanyPage() {
     }
 
     setDisplayName(companySettings.displayName ?? "");
-    setProformPrefix(companySettings.proformPrefix ?? "PRO");
     setTaxPercentage(String(companySettings.taxPercentage ?? 13));
     setCurrencySymbol(companySettings.currencySymbol ?? "₡");
     setTaxLabel(companySettings.taxLabel ?? t("common.defaults.taxLabel"));
@@ -44,11 +43,11 @@ export function useOnboardingCompanyPage() {
     () => ({
       currency: currencySymbol.trim() || "₡",
       displayName: displayName.trim() || t("common.defaults.companyName"),
-      prefix: proformPrefix.trim() || "PRO",
+      numberPreview: getProformSeriesPreview(),
       tax: taxPercentage.trim() || "0",
       taxLabel: taxLabel.trim() || t("common.defaults.taxLabel"),
     }),
-    [currencySymbol, displayName, proformPrefix, t, taxLabel, taxPercentage],
+    [currencySymbol, displayName, t, taxLabel, taxPercentage],
   );
 
   function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
@@ -63,11 +62,6 @@ export function useOnboardingCompanyPage() {
 
     if (!displayName.trim()) {
       setFeedback(createErrorFeedback(t("pages.onboardingCompany.feedback.displayNameRequired")));
-      return;
-    }
-
-    if (!proformPrefix.trim()) {
-      setFeedback(createErrorFeedback(t("pages.onboardingCompany.feedback.prefixRequired")));
       return;
     }
 
@@ -98,7 +92,7 @@ export function useOnboardingCompanyPage() {
         logoFileName: companySettings?.logoFileName ?? null,
         phone: companySettings?.phone ?? null,
         primaryColor: companySettings?.primaryColor ?? "#1B2D5A",
-        proformPrefix: proformPrefix.trim(),
+        proformPrefix: companySettings?.proformPrefix?.trim() || "PRO",
         secondaryColor: companySettings?.secondaryColor ?? "#e6c7f0",
         taxLabel: taxLabel.trim() || t("common.defaults.taxLabel"),
         taxPercentage: parsedTaxPercentage,
@@ -130,10 +124,8 @@ export function useOnboardingCompanyPage() {
     isSubmitting,
     logoFile,
     preview,
-    proformPrefix,
     setCurrencySymbol,
     setDisplayName,
-    setProformPrefix,
     setTaxLabel,
     setTaxPercentage,
     shouldRedirect: !isLoading && isCompanySetupComplete(companySettings),

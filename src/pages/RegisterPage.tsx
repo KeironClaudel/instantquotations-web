@@ -208,15 +208,6 @@ export function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.proformPrefix")}</label>
-                <input
-                  className={inputClassName}
-                  value={form.proformPrefix}
-                  onChange={(event) => updateField("proformPrefix", event.target.value)}
-                />
-              </div>
-
-              <div>
                 <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.taxPercentage")}</label>
                 <input
                   type="number"
@@ -315,7 +306,7 @@ export function RegisterPage() {
               style={{ backgroundColor: preview.primaryColor }}
             >
               <div className="text-xs uppercase tracking-wide text-white/70">
-                {preview.prefix}-000001
+                {preview.numberPreview}
               </div>
 
               <div className="mt-2 text-2xl font-semibold">{preview.displayName}</div>

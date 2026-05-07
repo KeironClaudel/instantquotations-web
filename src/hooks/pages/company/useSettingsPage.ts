@@ -7,6 +7,7 @@ import {
   updateCompanySettings,
 } from "@/lib/api/companySettingsApi";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
+import { getProformSeriesPreview } from "@/lib/utils/proformNumber";
 import type { CompanySettings } from "@/types/company";
 
 type FeedbackState = {
@@ -25,7 +26,6 @@ function createEmptyFormState(defaultTaxLabel: string) {
     logoFileName: "",
     phone: "",
     primaryColor: "#1B2D5A",
-    proformPrefix: "PRO",
     secondaryColor: "#e6c7f0",
     taxLabel: defaultTaxLabel,
     taxPercentage: "0",
@@ -47,7 +47,6 @@ function buildFormState(settings: CompanySettings): SettingsFormState {
     logoFileName: settings.logoFileName ?? "",
     phone: settings.phone ?? "",
     primaryColor: settings.primaryColor ?? "#1B2D5A",
-    proformPrefix: settings.proformPrefix ?? "PRO",
     secondaryColor: settings.secondaryColor ?? "#e6c7f0",
     taxLabel: settings.taxLabel ?? "Tax",
     taxPercentage: String(settings.taxPercentage ?? 0),
@@ -91,7 +90,7 @@ export function useSettingsPage() {
       accentColor: form.accentColor || "#dbe2ff",
       currencySymbol: form.currencySymbol || "₡",
       displayName: form.displayName || t("common.defaults.companyName"),
-      prefix: form.proformPrefix || "PRO",
+      numberPreview: getProformSeriesPreview(),
       primaryColor: form.primaryColor || "#1B2D5A",
       secondaryColor: form.secondaryColor || "#e6c7f0",
       taxLabel: form.taxLabel || t("common.defaults.taxLabel"),
@@ -135,7 +134,7 @@ export function useSettingsPage() {
         logoFileName: form.logoFileName.trim() || null,
         phone: form.phone.trim() || null,
         primaryColor: form.primaryColor.trim() || null,
-        proformPrefix: form.proformPrefix.trim(),
+        proformPrefix: companySettings?.proformPrefix?.trim() || "PRO",
         secondaryColor: form.secondaryColor.trim() || null,
         taxLabel: form.taxLabel.trim(),
         taxPercentage: parsedTaxPercentage,

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { registerCompany } from "@/lib/api/authApi";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
+import { getProformSeriesPreview } from "@/lib/utils/proformNumber";
 
 type FeedbackState = {
   type: "success" | "error";
@@ -23,7 +24,6 @@ type RegisterFormState = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
-  proformPrefix: string;
   taxPercentage: string;
   currencySymbol: string;
   taxLabel: string;
@@ -50,7 +50,6 @@ function createInitialFormState(defaultTerms: string, defaultTaxLabel: string): 
     ownerFullName: "",
     password: "",
     primaryColor: "#1B2D5A",
-    proformPrefix: "PRO",
     secondaryColor: "#e6c7f0",
     taxLabel: defaultTaxLabel,
     taxPercentage: "13",
@@ -102,7 +101,7 @@ export function useRegisterPage() {
       accentColor: form.accentColor,
       currencySymbol: form.currencySymbol.trim() || "₡",
       displayName: form.displayName.trim() || t("common.defaults.companyName"),
-      prefix: form.proformPrefix.trim() || "PRO",
+      numberPreview: getProformSeriesPreview(),
       primaryColor: form.primaryColor,
       secondaryColor: form.secondaryColor,
       taxLabel: form.taxLabel.trim() || t("common.defaults.taxLabel"),
@@ -199,7 +198,7 @@ export function useRegisterPage() {
         primaryColor: form.primaryColor,
         secondaryColor: form.secondaryColor,
         accentColor: form.accentColor,
-        proformPrefix: form.proformPrefix.trim(),
+        proformPrefix: "PRO",
         taxPercentage: parsedTaxPercentage,
         currencySymbol: form.currencySymbol.trim(),
         taxLabel: form.taxLabel.trim(),

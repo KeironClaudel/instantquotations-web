@@ -129,7 +129,7 @@ export const en = {
         "Finish the essential company fields required for a smoother workflow.",
       reviewBranding: "Review Branding",
       reviewBrandingDescription:
-        "Check colors, prefix, logo, and preview how your workspace looks.",
+        "Check colors, logo, and preview how your workspace looks.",
       latestSettingsSnapshot: "Latest Settings Snapshot",
       latestSettingsSnapshotDescription:
         "A quick overview of the current company configuration.",
@@ -144,7 +144,8 @@ export const en = {
       finishSetupCta: "Finish company setup",
       finishSetupCtaDescription:
         "Complete your basic company information so proforms stay consistent and production-ready.",
-      prefixHelper: "Used for proform numbering.",
+      nextProformNumber: "Next proform number",
+      nextProformNumberHelper: "Preview of the automatic yearly numbering.",
       taxHelper: "{{label}} configured per company.",
       currencyHelper: "Displayed across totals and summaries.",
       logoUploaded: "Uploaded",
@@ -199,7 +200,6 @@ export const en = {
         "Complete the form above to generate a proform and unlock PDF download, share link, and email delivery actions.",
       proformCreated: "Proform Created",
       statusPrefix: "Status: {{status}}",
-      prefixLabel: "Prefix: {{prefix}}",
       taxLabel: "Tax: {{tax}}%",
       proformActions: "Proform Actions",
       proformActionsDescription: "Download, share, or send the generated proform.",
@@ -248,7 +248,6 @@ export const en = {
       businessEssentials: "Business Essentials",
       businessEssentialsDescription:
         "These values will appear in your proforms and calculations.",
-      proformPrefix: "Proform Prefix",
       taxPercentage: "Tax Percentage",
       currencySymbol: "Currency Symbol",
       taxLabel: "Tax Label",
@@ -260,7 +259,6 @@ export const en = {
         "This gives you a quick idea of how your company identity will look.",
       feedback: {
         displayNameRequired: "Display name is required.",
-        prefixRequired: "Proform prefix is required.",
         currencyRequired: "Currency symbol is required.",
         taxRange: "Tax percentage must be between 0 and 100.",
         success: "Company setup completed successfully.",
@@ -390,7 +388,6 @@ export const en = {
       primaryColor: "Primary Color",
       secondaryColor: "Secondary Color",
       accentColor: "Accent Color",
-      proformPrefix: "Proform Prefix",
       taxPercentage: "Tax Percentage",
       currencySymbol: "Currency Symbol",
       taxLabel: "Tax Label",
