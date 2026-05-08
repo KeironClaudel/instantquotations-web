@@ -2,26 +2,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDashboardPage } from "@/hooks/pages/dashboard/useDashboardPage";
 
-function InfoCard({
-  title,
-  value,
-  helper,
-}: {
-  title: string;
-  value: string;
-  helper?: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
-        {title}
-      </div>
-      <div className="mt-2 text-lg font-semibold text-slate-900">{value}</div>
-      {helper ? <div className="mt-1 text-sm text-slate-500">{helper}</div> : null}
-    </div>
-  );
-}
-
 function QuickAction({
   to,
   title,
@@ -35,267 +15,82 @@ function QuickAction({
 }) {
   const className =
     variant === "highlight"
-      ? "rounded-2xl border border-amber-200 bg-amber-50 p-4 transition hover:bg-amber-100"
-      : "rounded-2xl border border-slate-200 bg-white p-4 transition hover:bg-slate-50";
+      ? "rounded-3xl border border-slate-300 bg-slate-100 p-5 text-slate-900 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+      : "rounded-3xl border border-slate-200 bg-white p-5 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/80";
 
   return (
     <Link to={to} className={className}>
-      <div className="text-base font-semibold text-slate-900">{title}</div>
-      <div className="mt-1 text-sm leading-6 text-slate-600">{description}</div>
+      <div className={`text-base font-semibold ${variant === "highlight" ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100"}`}>
+        {title}
+      </div>
+      <div className={`mt-2 text-sm leading-6 ${variant === "highlight" ? "text-slate-700 dark:text-slate-300" : "text-slate-600 dark:text-slate-400"}`}>
+        {description}
+      </div>
     </Link>
   );
 }
 
 export function DashboardPage() {
   const { t } = useTranslation();
-  const {
-    companySettings,
-    companyName,
-    currencySymbol,
-    isSetupComplete,
-    logoUrl,
-    nextNumberPreview,
-    phone,
-    primaryColor,
-    taxLabel,
-    taxPercentage,
-    userFirstName,
-    website,
-  } = useDashboardPage();
+  const { companyName, isSetupComplete, userFirstName } = useDashboardPage();
 
   return (
     <div className="space-y-7">
-      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600">
-              {t("pages.dashboard.badge")}
-            </div>
-
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
-              {t("pages.dashboard.welcome", { name: userFirstName })}
-            </h1>
-
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              {t("pages.dashboard.description")}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
-              {t("components.appShell.workspace")}
-            </div>
-            <div className="mt-1 text-lg font-semibold text-slate-900">
-              {companyName}
-            </div>
-            <div className="mt-2 text-sm text-slate-600">
-              {t("components.appShell.setupStatus")}:{" "}
-              <span
-                className={
-                  isSetupComplete ? "font-medium text-emerald-700" : "font-medium text-amber-700"
-                }
-              >
-                {isSetupComplete
-                  ? t("components.appShell.setupComplete")
-                  : t("components.appShell.setupNeedsAttention")}
-              </span>
-            </div>
-          </div>
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+          {t("pages.dashboard.badge")}
         </div>
 
-        {!isSetupComplete ? (
-          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-            <div className="text-sm font-semibold text-amber-900">
-              {t("pages.dashboard.finishSetupTitle")}
-            </div>
-            <p className="mt-1 text-sm leading-6 text-amber-800">
-              {t("pages.dashboard.finishSetupBody")}
-            </p>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          {t("pages.dashboard.welcome", { name: userFirstName })}
+        </h1>
 
-            <div className="mt-4">
-              <Link
-                to="/app/onboarding/company"
-                className="inline-flex rounded-2xl bg-amber-500 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-amber-600"
-              >
-                {t("common.actions.completeSetup")}
-              </Link>
-            </div>
-          </div>
-        ) : null}
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+          {t("pages.dashboard.description")}
+        </p>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+          <span className="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+            {companyName}
+          </span>
+
+          <span
+            className={`rounded-full px-3 py-1 font-medium ${
+              isSetupComplete
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-amber-100 text-amber-800"
+            }`}
+          >
+            {isSetupComplete
+              ? t("components.appShell.setupComplete")
+              : t("components.appShell.setupNeedsAttention")}
+          </span>
+        </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-5">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-                {t("pages.dashboard.quickActions")}
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                {t("pages.dashboard.quickActionsDescription")}
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <QuickAction
-                to="/app/proforms/new"
-                title={t("pages.dashboard.createNewProform")}
-                description={t("pages.dashboard.createNewProformDescription")}
-                variant="highlight"
-              />
-
-              <QuickAction
-                to="/app/settings"
-                title={t("pages.dashboard.openCompanySettings")}
-                description={t("pages.dashboard.openCompanySettingsDescription")}
-              />
-
-              {!isSetupComplete ? (
-                <QuickAction
-                  to="/app/onboarding/company"
-                  title={t("common.actions.completeSetup")}
-                  description={t("pages.dashboard.completeSetupDescription")}
-                  variant="highlight"
-                />
-              ) : null}
-
-              <QuickAction
-                to="/app/settings"
-                title={t("pages.dashboard.reviewBranding")}
-                description={t("pages.dashboard.reviewBrandingDescription")}
-              />
-            </div>
-          </section>
-
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-5">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-                {t("pages.dashboard.latestSettingsSnapshot")}
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                {t("pages.dashboard.latestSettingsSnapshotDescription")}
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InfoCard
-                title={t("pages.dashboard.nextProformNumber")}
-                value={nextNumberPreview}
-                helper={t("pages.dashboard.nextProformNumberHelper")}
-              />
-              <InfoCard title={t("common.finance.tax")} value={taxPercentage} helper={t("pages.dashboard.taxHelper", { label: taxLabel })} />
-              <InfoCard title={t("common.finance.currency")} value={currencySymbol} helper={t("pages.dashboard.currencyHelper")} />
-              <InfoCard title={t("common.labels.website")} value={website} />
-              <InfoCard title={t("common.labels.phone")} value={phone} />
-              <InfoCard
-                title={t("pages.settings.logo")}
-                value={companySettings?.logoUrl ? t("pages.dashboard.logoUploaded") : t("pages.dashboard.logoNotUploaded")}
-                helper={
-                  companySettings?.logoUrl
-                    ? t("pages.dashboard.logoUploadedHelper")
-                    : t("pages.dashboard.logoNotUploadedHelper")
-                }
-              />
-            </div>
-          </section>
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+        <div className="mb-5">
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            {t("pages.dashboard.quickActions")}
+          </h2>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            {t("pages.dashboard.quickActionsDescription")}
+          </p>
         </div>
 
-        <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-5">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-                {t("pages.dashboard.companyIdentity")}
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                {t("pages.dashboard.companyIdentityDescription")}
-              </p>
-            </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <QuickAction
+            to="/app/proforms/new"
+            title={t("pages.dashboard.createNewProform")}
+            description={t("pages.dashboard.createNewProformDescription")}
+            variant="highlight"
+          />
 
-            <div className="rounded-3xl bg-slate-100 p-4">
-              <div
-                  className="rounded-3xl p-5 text-white"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                <div className="flex items-center gap-3">
-                  {logoUrl ? (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
-                      <img
-                        src={logoUrl}
-                        alt={companyName}
-                        className="h-8 w-8 object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-semibold text-slate-900">
-                      IP
-                    </div>
-                  )}
-
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-white/70">
-                      {nextNumberPreview}
-                    </div>
-                    <div className="mt-1 text-xl font-semibold">{companyName}</div>
-                  </div>
-                </div>
-
-                <div className="mt-5 grid gap-3">
-                    <div className="rounded-2xl bg-white/10 px-4 py-3">
-                      <div className="text-xs uppercase tracking-wide text-white/70">
-                        {t("pages.dashboard.taxConfiguration")}
-                      </div>
-                    <div className="mt-1 font-medium">
-                      {taxLabel} · {taxPercentage}
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
-                    <div className="text-xs uppercase tracking-wide text-white/70">
-                      {t("common.finance.currency")}
-                    </div>
-                    <div className="mt-1 font-medium">{currencySymbol}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-                {t("pages.dashboard.nextBestAction")}
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                {t("pages.dashboard.nextBestActionDescription")}
-              </p>
-            </div>
-
-            {isSetupComplete ? (
-              <Link
-                to="/app/proforms/new"
-                className="block rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:bg-slate-100"
-              >
-                <div className="text-base font-semibold text-slate-900">
-                  {t("pages.dashboard.createNextProform")}
-                </div>
-                <div className="mt-1 text-sm leading-6 text-slate-600">
-                  {t("pages.dashboard.createNextProformDescription")}
-                </div>
-              </Link>
-            ) : (
-              <Link
-                to="/app/onboarding/company"
-                className="block rounded-2xl border border-amber-200 bg-amber-50 p-4 transition hover:bg-amber-100"
-              >
-                <div className="text-base font-semibold text-amber-900">
-                  {t("pages.dashboard.finishSetupCta")}
-                </div>
-                <div className="mt-1 text-sm leading-6 text-amber-800">
-                  {t("pages.dashboard.finishSetupCtaDescription")}
-                </div>
-              </Link>
-            )}
-          </section>
+          <QuickAction
+            to="/app/proforms"
+            title={t("pages.dashboard.showPreviousProforms")}
+            description={t("pages.dashboard.showPreviousProformsDescription")}
+          />
         </div>
       </section>
     </div>

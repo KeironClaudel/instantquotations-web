@@ -1,6 +1,7 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/providers/useAuth";
+import { getClients } from "@/lib/api/clientApi";
 import { createProform } from "@/lib/api/proformApi";
 import { createProformShareLink, downloadProformPdf, sendProformByEmail } from "@/lib/api/proformActionsApi";
 import { copyTextToClipboard } from "@/lib/utils/clipboard";
@@ -11,7 +12,9 @@ import {
   calculateTaxAmount,
   calculateTotal,
 } from "@/lib/utils/proformCalculations";
+import { getProformCurrencySymbol, type ProformCurrency } from "@/lib/utils/proformCurrency";
 import { shareFile, shareUrl } from "@/lib/utils/share";
+import type { ClientIdentificationType, ClientRecord } from "@/types/client";
 import type { CreatedProformSummary } from "@/types/proformActions";
 import type { ProformItemDraft } from "@/types/proform";
 
@@ -34,14 +37,28 @@ function createEmptyItem(): ProformItemDraft {
   };
 }
 
+function normalizeClientText(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 export function useNewProformPage() {
   const { t } = useTranslation();
   const { companySettings, user } = useAuth();
 
+  const [clients, setClients] = useState<ClientRecord[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [notes, setNotes] = useState("");
+  const [clientIdentificationType, setClientIdentificationType] = useState<ClientIdentificationType | "">("");
+  const [clientIdentificationNumber, setClientIdentificationNumber] = useState("");
+  const [currency, setCurrency] = useState<ProformCurrency>("Colones");
+  const [location, setLocation] = useState("");
+  const [internalNotes, setInternalNotes] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
+  const [scopeOfWork, setScopeOfWork] = useState("");
+  const [serviceConditions, setServiceConditions] = useState("");
+  const [paymentConditions, setPaymentConditions] = useState("");
   const [items, setItems] = useState<ProformItemDraft[]>([createEmptyItem()]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
@@ -57,10 +74,46 @@ export function useNewProformPage() {
   const [isCopyingShareLink, setIsCopyingShareLink] = useState(false);
   const [queuedNotice, setQueuedNotice] = useState<QueueNotice>(null);
 
+  useEffect(() => {
+    async function loadClients() {
+      try {
+        const data = await getClients();
+        setClients(data);
+      } catch {
+        setClients([]);
+      }
+    }
+
+    void loadClients();
+  }, []);
+
   const taxPercentage = companySettings?.taxPercentage ?? 0;
   const subtotal = useMemo(() => calculateSubtotal(items), [items]);
   const taxAmount = useMemo(() => calculateTaxAmount(subtotal, taxPercentage), [subtotal, taxPercentage]);
   const total = useMemo(() => calculateTotal(subtotal, taxAmount), [subtotal, taxAmount]);
+  const currencySymbol = getProformCurrencySymbol(currency);
+
+  const filteredClients = useMemo(() => {
+    const normalizedQuery = normalizeClientText(clientName);
+
+    if (normalizedQuery.length < 2) {
+      return [];
+    }
+
+    return clients
+      .filter((client) => normalizeClientText(client.name).includes(normalizedQuery))
+      .slice(0, 6);
+  }, [clientName, clients]);
+
+  const selectedClient = useMemo(
+    () => clients.find((client) => client.id === selectedClientId) ?? null,
+    [clients, selectedClientId],
+  );
+
+  const showClientSuggestions =
+    selectedClientId === null &&
+    filteredClients.length > 0 &&
+    normalizeClientText(clientName).length >= 2;
 
   function clearFeedback() {
     setFeedback(null);
@@ -87,11 +140,33 @@ export function useNewProformPage() {
     setItems((current) => (current.length === 1 ? current : current.filter((item) => item.id !== itemId)));
   }
 
+  function applyClientSnapshot(client: ClientRecord) {
+    setSelectedClientId(client.id);
+    setClientName(client.name);
+    setClientEmail(client.email ?? "");
+    setClientPhone(client.phone ?? "");
+    setClientIdentificationType(client.identificationType ?? "");
+    setClientIdentificationNumber(client.identificationNumber ?? "");
+  }
+
+  function clearSelectedClient() {
+    setSelectedClientId(null);
+  }
+
   function resetDraftForm() {
+    setSelectedClientId(null);
     setClientName("");
     setClientEmail("");
     setClientPhone("");
-    setNotes("");
+    setClientIdentificationType("");
+    setClientIdentificationNumber("");
+    setCurrency("Colones");
+    setLocation("");
+    setInternalNotes("");
+    setServiceDescription("");
+    setScopeOfWork("");
+    setServiceConditions("");
+    setPaymentConditions("");
     setItems([createEmptyItem()]);
   }
 
@@ -284,6 +359,11 @@ export function useNewProformPage() {
       return;
     }
 
+    if ((clientIdentificationType && !clientIdentificationNumber.trim()) || (!clientIdentificationType && clientIdentificationNumber.trim())) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.clientIdentificationRequired")));
+      return;
+    }
+
     if (normalizedItems.length === 0) {
       setFeedback(createErrorFeedback(t("pages.newProform.feedback.atLeastOneItem")));
       return;
@@ -301,11 +381,20 @@ export function useNewProformPage() {
     try {
       const result = await createProform(
         {
+          clientId: selectedClientId,
           clientEmail: clientEmail.trim() || null,
+          clientIdentificationNumber: clientIdentificationNumber.trim() || null,
+          clientIdentificationType: clientIdentificationType || null,
           clientName: clientName.trim(),
           clientPhone: clientPhone.trim() || null,
+          currency,
+          internalNotes: internalNotes.trim() || null,
           items: normalizedItems,
-          notes: notes.trim() || null,
+          location: location.trim() || null,
+          paymentConditions: paymentConditions.trim() || null,
+          scopeOfWork: scopeOfWork.trim() || null,
+          serviceConditions: serviceConditions.trim() || null,
+          serviceDescription: serviceDescription.trim() || null,
         },
         user
           ? {
@@ -340,6 +429,7 @@ export function useNewProformPage() {
       setCreatedProform({
         id: response.proformId,
         number: response.number,
+        currency: response.currency,
         status: response.status,
         subtotal: response.subtotal,
         taxAmount: response.taxAmount,
@@ -360,21 +450,29 @@ export function useNewProformPage() {
 
   return {
     addItem,
+    applyClientSnapshot,
     clientEmail,
+    clientIdentificationNumber,
+    clientIdentificationType,
     clientName,
     clientPhone,
+    clients,
     companySettings,
     createdProform,
+    currency,
+    currencySymbol,
     emailMessage,
     emailSubject,
     emailTo,
     feedback,
+    filteredClients,
     handleCopyShareLink,
     handleCreateShareLink,
     handleDownloadPdf,
     handleNativeShare,
     handleSendByEmail,
     handleSubmit,
+    internalNotes,
     isCopyingShareLink,
     isCreatingShareLink,
     isDownloading,
@@ -382,22 +480,38 @@ export function useNewProformPage() {
     isSharing,
     isSubmitting,
     items,
-    notes,
+    location,
+    paymentConditions,
     queuedNotice,
     removeItem,
     resetCreatedProform,
+    scopeOfWork,
+    selectedClient,
+    selectedClientId,
+    serviceConditions,
+    serviceDescription,
     setClientEmail,
+    setClientIdentificationNumber,
+    setClientIdentificationType,
     setClientName,
     setClientPhone,
+    setCurrency,
     setEmailMessage,
     setEmailSubject,
     setEmailTo,
-    setNotes,
+    setInternalNotes,
+    setLocation,
+    setPaymentConditions,
+    setScopeOfWork,
+    setServiceConditions,
+    setServiceDescription,
     shareUrlValue,
+    showClientSuggestions,
     subtotal,
     taxAmount,
     taxPercentage,
     total,
     updateItem,
+    clearSelectedClient,
   };
 }

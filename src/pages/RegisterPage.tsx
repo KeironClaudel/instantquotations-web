@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRegisterPage } from "@/hooks/pages/auth/useRegisterPage";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 export function RegisterPage() {
   const { t } = useTranslation();
@@ -9,35 +10,36 @@ export function RegisterPage() {
     useRegisterPage();
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200";
+    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
 
   const textareaClassName =
-    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200";
+    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="mb-8 text-center">
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex justify-end gap-2">
+          <ThemeSwitcher compact />
           <LanguageSwitcher compact />
         </div>
 
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600">
+        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
           {t("pages.register.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {t("pages.register.title")}
         </h1>
 
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
           {t("pages.register.description")}
         </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.85fr]">
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("common.labels.companyInformation")}
             </h2>
 
@@ -120,8 +122,8 @@ export function RegisterPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.register.ownerAccount")}
             </h2>
 
@@ -171,8 +173,8 @@ export function RegisterPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.register.brandingAndTax")}
             </h2>
 
@@ -181,7 +183,7 @@ export function RegisterPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.primaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.primaryColor}
                   onChange={(event) => updateField("primaryColor", event.target.value)}
                 />
@@ -191,7 +193,7 @@ export function RegisterPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.secondaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.secondaryColor}
                   onChange={(event) => updateField("secondaryColor", event.target.value)}
                 />
@@ -201,7 +203,7 @@ export function RegisterPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.accentColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.accentColor}
                   onChange={(event) => updateField("accentColor", event.target.value)}
                 />
@@ -251,8 +253,8 @@ export function RegisterPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("common.labels.termsAndConditions")}
             </h2>
 
@@ -278,29 +280,29 @@ export function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl bg-slate-900 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             {isSubmitting ? t("pages.register.creatingWorkspace") : t("pages.register.createWorkspace")}
           </button>
 
-          <div className="text-center text-sm text-slate-600">
+          <div className="text-center text-sm text-slate-600 dark:text-slate-400">
             {t("pages.register.alreadyHaveAccount")}{" "}
-            <Link to="/login" className="font-medium text-slate-900 underline">
+            <Link to="/login" className="font-medium text-slate-900 underline dark:text-slate-100">
               {t("pages.register.signIn")}
             </Link>
           </div>
         </form>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {t("pages.register.livePreview")}
           </h2>
 
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
             {t("pages.register.livePreviewDescription")}
           </p>
 
-          <div className="mt-5 rounded-3xl bg-slate-100 p-4">
+          <div className="mt-5 rounded-3xl bg-slate-100 p-4 dark:bg-slate-950">
             <div
               className="rounded-3xl p-5 text-white"
               style={{ backgroundColor: preview.primaryColor }}

@@ -22,7 +22,7 @@ export function OnboardingCompanyPage() {
   } = useOnboardingCompanyPage();
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200";
+    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
 
   if (shouldRedirect) {
     return <Navigate to="/app" replace />;
@@ -31,29 +31,29 @@ export function OnboardingCompanyPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-8 text-center">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600">
+        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
           {t("pages.onboardingCompany.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {t("pages.onboardingCompany.title")}
         </h1>
 
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
           {t("pages.onboardingCompany.description")}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <form
-          className="space-y-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          className="space-y-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6"
           onSubmit={handleSubmit}
         >
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.onboardingCompany.businessEssentials")}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
               {t("pages.onboardingCompany.businessEssentialsDescription")}
             </p>
           </div>
@@ -131,22 +131,22 @@ export function OnboardingCompanyPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl bg-slate-900 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             {isSubmitting ? t("pages.onboardingCompany.savingSetup") : t("pages.onboardingCompany.continueToProforms")}
           </button>
         </form>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {t("pages.onboardingCompany.livePreview")}
           </h2>
 
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
             {t("pages.onboardingCompany.livePreviewDescription")}
           </p>
 
-          <div className="mt-5 rounded-3xl bg-slate-100 p-4">
+          <div className="mt-5 rounded-3xl bg-slate-100 p-4 dark:bg-slate-950">
             <div className="rounded-3xl bg-slate-900 p-5 text-white">
               <div className="text-xs uppercase tracking-wide text-white/70">
                 {preview.numberPreview}

@@ -101,7 +101,6 @@ export function useProformsListPage() {
     clearFilters,
     clientFilter,
     companySettings,
-    currencySymbol: companySettings?.currencySymbol ?? "₡",
     feedback,
     filteredProforms,
     fromDateFilter,

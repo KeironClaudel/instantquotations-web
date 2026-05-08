@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   color-scheme: light;
 }
@@ -10,6 +12,24 @@ body,
   min-height: 100%;
 }
 
+html {
+  background: #f1f5f9;
+}
+
 body {
   margin: 0;
+  background: #f1f5f9;
+  color: #0f172a;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+html.dark {
+  background: #020617;
+}
+
+html.dark body {
+  background: #020617;
+  color: #e2e8f0;
 }

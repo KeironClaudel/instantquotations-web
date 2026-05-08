@@ -11,6 +11,7 @@ import {
 import { getProformById } from "@/lib/api/proformHistoryApi";
 import { downloadBlobFile } from "@/lib/utils/fileDownload";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
+import { getProformCurrencySymbol } from "@/lib/utils/proformCurrency";
 import { shareFile, shareUrl } from "@/lib/utils/share";
 import type { ProformDetails } from "@/types/proformHistory";
 
@@ -205,7 +206,7 @@ export function useProformDetailsPage() {
 
   return {
     companySettings,
-    currencySymbol: companySettings?.currencySymbol ?? "₡",
+    currencySymbol: proform ? getProformCurrencySymbol(proform.currency) : companySettings?.currencySymbol ?? "₡",
     editableStatuses,
     feedback,
     handleDownloadPdf,

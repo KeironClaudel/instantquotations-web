@@ -18,10 +18,10 @@ export function SettingsPage() {
   } = useSettingsPage();
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200";
+    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
 
   const textareaClassName =
-    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200";
+    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
 
   if (isLoading) {
     return <PageLoader message={t("pages.settings.loading")} />;
@@ -30,23 +30,23 @@ export function SettingsPage() {
   return (
     <div className="mx-auto max-w-5xl px-1 sm:px-0">
       <div className="mb-8">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600">
+        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
           {t("pages.settings.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {t("pages.settings.title")}
         </h1>
 
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
           {t("pages.settings.description")}
         </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("common.labels.companyInformation")}
             </h2>
 
@@ -118,8 +118,8 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.settings.brandingRules")}
             </h2>
 
@@ -128,7 +128,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.primaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.primaryColor}
                   onChange={(event) => updateField("primaryColor", event.target.value)}
                 />
@@ -138,7 +138,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.secondaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.secondaryColor}
                   onChange={(event) => updateField("secondaryColor", event.target.value)}
                 />
@@ -148,7 +148,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.accentColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2"
+                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
                   value={form.accentColor}
                   onChange={(event) => updateField("accentColor", event.target.value)}
                 />
@@ -202,21 +202,21 @@ export function SettingsPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="w-full rounded-2xl bg-slate-900 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             {isSaving ? t("pages.settings.savingChanges") : t("pages.settings.saveSettings")}
           </button>
         </form>
 
         <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.settings.logo")}
             </h2>
 
             <div className="flex flex-col items-center gap-4">
               {companySettings?.logoUrl ? (
-                <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-slate-200 bg-white shadow-sm">
+                <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-950">
                   <img
                     src={companySettings.logoUrl}
                     alt={companySettings.displayName}
@@ -224,12 +224,12 @@ export function SettingsPage() {
                   />
                 </div>
               ) : (
-                <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-slate-50 text-center text-xs font-medium text-slate-500">
+                <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-slate-50 text-center text-xs font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
                   {t("pages.settings.noLogo")}
                 </div>
               )}
 
-              <label className="w-full cursor-pointer rounded-2xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+              <label className="w-full cursor-pointer rounded-2xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900">
                 {isUploadingLogo ? t("pages.settings.uploading") : t("pages.settings.replaceLogo")}
                 <input
                   type="file"
@@ -242,12 +242,12 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900">
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {t("pages.settings.livePreview")}
             </h2>
 
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
               <div
                 className="rounded-3xl p-4 text-white"
                 style={{ backgroundColor: previewStyles.primaryColor }}
