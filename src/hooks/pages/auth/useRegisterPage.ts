@@ -23,6 +23,7 @@ type RegisterFormState = {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  proformPrefix: string;
   taxPercentage: string;
   currencySymbol: string;
   taxLabel: string;
@@ -48,6 +49,7 @@ function createInitialFormState(defaultTerms: string, defaultTaxLabel: string): 
     ownerEmail: "",
     ownerFullName: "",
     password: "",
+    proformPrefix: "C",
     primaryColor: "#1B2D5A",
     secondaryColor: "#e6c7f0",
     taxLabel: defaultTaxLabel,
@@ -82,8 +84,9 @@ export function useRegisterPage(options?: UseRegisterPageOptions) {
       accentColor: form.accentColor,
       currencySymbol: form.currencySymbol.trim() || "₡",
       displayName: form.displayName.trim() || t("common.defaults.companyName"),
-      numberPreview: getProformSeriesPreview(),
+      numberPreview: getProformSeriesPreview(form.proformPrefix),
       primaryColor: form.primaryColor,
+      proformPrefix: form.proformPrefix.trim().toUpperCase() || "C",
       secondaryColor: form.secondaryColor,
       taxLabel: form.taxLabel.trim() || t("common.defaults.taxLabel"),
       taxPercentage: form.taxPercentage.trim() || "0",
@@ -128,6 +131,16 @@ export function useRegisterPage(options?: UseRegisterPageOptions) {
       return;
     }
 
+    if (!form.proformPrefix.trim()) {
+      setFeedback(createErrorFeedback(t("pages.register.feedback.proformPrefixRequired")));
+      return;
+    }
+
+    if (!/^[a-zA-Z]+$/.test(form.proformPrefix.trim())) {
+      setFeedback(createErrorFeedback(t("pages.register.feedback.proformPrefixLettersOnly")));
+      return;
+    }
+
     if (!form.ownerFullName.trim()) {
       setFeedback(createErrorFeedback(t("pages.register.feedback.ownerFullNameRequired")));
       return;
@@ -145,11 +158,6 @@ export function useRegisterPage(options?: UseRegisterPageOptions) {
 
     if (form.password !== form.confirmPassword) {
       setFeedback(createErrorFeedback(t("pages.register.feedback.passwordMismatch")));
-      return;
-    }
-
-    if (!logoFile) {
-      setFeedback(createErrorFeedback(t("pages.register.feedback.logoRequired")));
       return;
     }
 
@@ -179,7 +187,7 @@ export function useRegisterPage(options?: UseRegisterPageOptions) {
         primaryColor: form.primaryColor,
         secondaryColor: form.secondaryColor,
         accentColor: form.accentColor,
-        proformPrefix: "PRO",
+        proformPrefix: form.proformPrefix.trim().toUpperCase(),
         taxPercentage: parsedTaxPercentage,
         currencySymbol: form.currencySymbol.trim(),
         taxLabel: form.taxLabel.trim(),

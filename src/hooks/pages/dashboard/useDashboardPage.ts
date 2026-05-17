@@ -15,7 +15,7 @@ export function useDashboardPage() {
     currencySymbol: companySettings?.currencySymbol?.trim() || "-",
     isSetupComplete,
     logoUrl: companySettings?.logoUrl ?? null,
-    nextNumberPreview: getProformSeriesPreview(),
+    nextNumberPreview: getProformSeriesPreview(companySettings?.proformPrefix ?? "C"),
     phone: companySettings?.phone?.trim() || t("common.defaults.notConfiguredYet"),
     primaryColor: companySettings?.primaryColor ?? "#0f172a",
     taxLabel: companySettings?.taxLabel?.trim() || "-",

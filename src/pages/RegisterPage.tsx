@@ -217,6 +217,20 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
               </div>
 
               <div>
+                <label className="mb-1 block text-sm font-medium">{t("pages.register.proformPrefix")}</label>
+                <input
+                  className={inputClassName}
+                  value={form.proformPrefix}
+                  onChange={(event) => updateField("proformPrefix", event.target.value.toUpperCase())}
+                  maxLength={5}
+                  required
+                />
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {t("pages.register.proformPrefixHelp")}
+                </p>
+              </div>
+
+              <div>
                 <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.taxPercentage")}</label>
                 <input
                   type="number"
@@ -248,13 +262,12 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
               </div>
 
               <div className="md:col-span-2">
-                <label className="mb-1 block text-sm font-medium">{t("pages.register.companyLogo")}</label>
+                <label className="mb-1 block text-sm font-medium">{t("pages.register.companyLogoOptional")}</label>
                 <input
                   type="file"
                   accept=".png,.jpg,.jpeg,.webp"
                   className={inputClassName}
                   onChange={handleLogoChange}
-                  required
                 />
               </div>
             </div>
@@ -316,7 +329,7 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
               className="rounded-3xl p-5 text-white"
               style={{ backgroundColor: preview.primaryColor }}
             >
-              <div className="text-xs uppercase tracking-wide text-white/70">
+                  <div className="text-xs uppercase tracking-wide text-white/70">
                 {preview.numberPreview}
               </div>
 

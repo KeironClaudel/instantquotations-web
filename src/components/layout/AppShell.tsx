@@ -31,13 +31,10 @@ export function AppShell() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <div className="flex min-w-0 items-center gap-3">
-            <LanguageSwitcher compact />
-            <ThemeSwitcher compact />
-
+        <div className="mx-auto flex max-w-6xl items-start justify-between gap-4 px-4 py-3 sm:px-6 md:items-center">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             {companySettings?.logoUrl ? (
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
                 <img
                   src={companySettings.logoUrl}
                   alt={companySettings.displayName}
@@ -45,7 +42,7 @@ export function AppShell() {
                 />
               </div>
             ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-200 text-sm font-semibold shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-200 text-sm font-semibold shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                 IP
               </div>
             )}
@@ -61,10 +58,15 @@ export function AppShell() {
                 </span>
               </div>
             </div>
+
+            <div className="hidden items-center gap-2 sm:flex">
+              <LanguageSwitcher compact />
+              <ThemeSwitcher compact />
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <nav className="hidden items-center gap-2 md:flex">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <nav className="hidden flex-wrap items-center justify-end gap-2 md:flex">
               <NavLink to="/app" end className={navLinkClassName}>
                 {t("components.appShell.dashboard")}
               </NavLink>
@@ -109,7 +111,14 @@ export function AppShell() {
         </div>
 
         <div className="border-t border-slate-200 bg-white md:hidden dark:border-slate-800 dark:bg-slate-950">
-          <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher compact />
+              <ThemeSwitcher compact />
+            </div>
+          </div>
+
+          <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6 md:hidden">
             <NavLink to="/app" end className={navLinkClassName}>
               {t("components.appShell.dashboard")}
             </NavLink>

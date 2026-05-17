@@ -43,11 +43,11 @@ export function useOnboardingCompanyPage() {
     () => ({
       currency: currencySymbol.trim() || "₡",
       displayName: displayName.trim() || t("common.defaults.companyName"),
-      numberPreview: getProformSeriesPreview(),
+      numberPreview: getProformSeriesPreview(companySettings?.proformPrefix ?? "C"),
       tax: taxPercentage.trim() || "0",
       taxLabel: taxLabel.trim() || t("common.defaults.taxLabel"),
     }),
-    [currencySymbol, displayName, t, taxLabel, taxPercentage],
+    [companySettings?.proformPrefix, currencySymbol, displayName, t, taxLabel, taxPercentage],
   );
 
   function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
@@ -93,7 +93,7 @@ export function useOnboardingCompanyPage() {
         logoFileName: companySettings?.logoFileName ?? null,
         phone: companySettings?.phone ?? null,
         primaryColor: companySettings?.primaryColor ?? "#1B2D5A",
-        proformPrefix: companySettings?.proformPrefix?.trim() || "PRO",
+        proformPrefix: companySettings?.proformPrefix?.trim() || "C",
         resendApiKey: null,
         resendReplyToEmail: companySettings?.resendReplyToEmail ?? null,
         resendSenderEmail: companySettings?.resendSenderEmail ?? null,

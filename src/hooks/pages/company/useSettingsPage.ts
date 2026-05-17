@@ -124,13 +124,13 @@ export function useSettingsPage() {
       accentColor: form.accentColor || "#dbe2ff",
       currencySymbol: form.currencySymbol || "₡",
       displayName: form.displayName || t("common.defaults.companyName"),
-      numberPreview: getProformSeriesPreview(),
+      numberPreview: getProformSeriesPreview(activeCompanySettings?.proformPrefix ?? "C"),
       primaryColor: form.primaryColor || "#1B2D5A",
       secondaryColor: form.secondaryColor || "#e6c7f0",
       taxLabel: form.taxLabel || t("common.defaults.taxLabel"),
       taxPercentage: form.taxPercentage || "0",
     }),
-    [form, t],
+    [activeCompanySettings?.proformPrefix, form, t],
   );
 
   function clearFeedback() {
@@ -179,7 +179,7 @@ export function useSettingsPage() {
         logoFileName: form.logoFileName.trim() || null,
         phone: form.phone.trim() || null,
         primaryColor: form.primaryColor.trim() || null,
-        proformPrefix: activeCompanySettings?.proformPrefix?.trim() || "PRO",
+        proformPrefix: activeCompanySettings?.proformPrefix?.trim() || "C",
         resendApiKey: form.clearResendApiKey ? null : form.resendApiKey.trim() || null,
         resendReplyToEmail: form.resendReplyToEmail.trim() || null,
         resendSenderEmail: form.resendSenderEmail.trim() || null,
