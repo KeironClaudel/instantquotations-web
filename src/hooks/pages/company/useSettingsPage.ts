@@ -15,10 +15,13 @@ type FeedbackState = {
   message: string;
 } | null;
 
+type EmailDeliveryStatus = "ready" | "incomplete" | "missing";
+
 function createEmptyFormState(defaultTaxLabel: string) {
   return {
     accentColor: "#dbe2ff",
     address: "",
+    clearResendApiKey: false,
     currencySymbol: "₡",
     displayName: "",
     email: "",
@@ -26,6 +29,10 @@ function createEmptyFormState(defaultTaxLabel: string) {
     logoFileName: "",
     phone: "",
     primaryColor: "#1B2D5A",
+    resendApiKey: "",
+    resendReplyToEmail: "",
+    resendSenderEmail: "",
+    resendSenderName: "",
     secondaryColor: "#e6c7f0",
     taxLabel: defaultTaxLabel,
     taxPercentage: "0",
@@ -40,6 +47,7 @@ function buildFormState(settings: CompanySettings): SettingsFormState {
   return {
     accentColor: settings.accentColor ?? "#dbe2ff",
     address: settings.address ?? "",
+    clearResendApiKey: false,
     currencySymbol: settings.currencySymbol ?? "₡",
     displayName: settings.displayName ?? "",
     email: settings.email ?? "",
@@ -47,6 +55,10 @@ function buildFormState(settings: CompanySettings): SettingsFormState {
     logoFileName: settings.logoFileName ?? "",
     phone: settings.phone ?? "",
     primaryColor: settings.primaryColor ?? "#1B2D5A",
+    resendApiKey: "",
+    resendReplyToEmail: settings.resendReplyToEmail ?? "",
+    resendSenderEmail: settings.resendSenderEmail ?? "",
+    resendSenderName: settings.resendSenderName ?? "",
     secondaryColor: settings.secondaryColor ?? "#e6c7f0",
     taxLabel: settings.taxLabel ?? "Tax",
     taxPercentage: String(settings.taxPercentage ?? 0),
@@ -63,6 +75,7 @@ export function useSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
+  const [settingsSnapshot, setSettingsSnapshot] = useState<CompanySettings | null>(companySettings);
   const [form, setForm] = useState<SettingsFormState>(() =>
     companySettings
       ? buildFormState(companySettings)
@@ -70,10 +83,17 @@ export function useSettingsPage() {
   );
 
   useEffect(() => {
+    if (companySettings) {
+      setSettingsSnapshot(companySettings);
+    }
+  }, [companySettings]);
+
+  useEffect(() => {
     async function loadSettings() {
       try {
         setIsLoading(true);
         const settings = await getCurrentCompanySettings(true);
+        setSettingsSnapshot(settings);
         setForm(buildFormState(settings));
       } catch {
         setFeedback(createErrorFeedback(t("pages.settings.feedback.loadFailed")));
@@ -84,6 +104,20 @@ export function useSettingsPage() {
 
     void loadSettings();
   }, [t]);
+
+  const activeCompanySettings = settingsSnapshot ?? companySettings;
+
+  const emailDeliveryStatus = useMemo<EmailDeliveryStatus>(() => {
+    if (activeCompanySettings?.isResendEmailDeliveryConfigured) {
+      return "ready";
+    }
+
+    if (activeCompanySettings?.hasResendApiKeyConfigured) {
+      return "incomplete";
+    }
+
+    return "missing";
+  }, [activeCompanySettings]);
 
   const previewStyles = useMemo(
     () => ({
@@ -121,12 +155,23 @@ export function useSettingsPage() {
       return;
     }
 
+    if (!form.clearResendApiKey && !activeCompanySettings?.hasResendApiKeyConfigured && !form.resendApiKey.trim()) {
+      setFeedback(createErrorFeedback(t("pages.settings.feedback.resendApiKeyRequired")));
+      return;
+    }
+
+    if (!form.clearResendApiKey && !form.resendSenderEmail.trim()) {
+      setFeedback(createErrorFeedback(t("pages.settings.feedback.resendSenderEmailRequired")));
+      return;
+    }
+
     setIsSaving(true);
 
     try {
       await updateCompanySettings({
         accentColor: form.accentColor.trim() || null,
         address: form.address.trim() || null,
+        clearResendApiKey: form.clearResendApiKey,
         currencySymbol: form.currencySymbol.trim(),
         displayName: form.displayName.trim(),
         email: form.email.trim() || null,
@@ -134,7 +179,11 @@ export function useSettingsPage() {
         logoFileName: form.logoFileName.trim() || null,
         phone: form.phone.trim() || null,
         primaryColor: form.primaryColor.trim() || null,
-        proformPrefix: companySettings?.proformPrefix?.trim() || "PRO",
+        proformPrefix: activeCompanySettings?.proformPrefix?.trim() || "PRO",
+        resendApiKey: form.clearResendApiKey ? null : form.resendApiKey.trim() || null,
+        resendReplyToEmail: form.resendReplyToEmail.trim() || null,
+        resendSenderEmail: form.resendSenderEmail.trim() || null,
+        resendSenderName: form.resendSenderName.trim() || null,
         secondaryColor: form.secondaryColor.trim() || null,
         taxLabel: form.taxLabel.trim(),
         taxPercentage: parsedTaxPercentage,
@@ -143,6 +192,9 @@ export function useSettingsPage() {
       });
 
       await refreshCompanySettings();
+      const refreshedSettings = await getCurrentCompanySettings(true);
+      setSettingsSnapshot(refreshedSettings);
+      setForm(buildFormState(refreshedSettings));
       setFeedback(createSuccessFeedback(t("pages.settings.feedback.saveSuccess")));
     } catch {
       setFeedback(createErrorFeedback(t("pages.settings.feedback.saveFailed")));
@@ -164,6 +216,8 @@ export function useSettingsPage() {
     try {
       await replaceCompanyLogo(file);
       await refreshCompanySettings();
+      const refreshedSettings = await getCurrentCompanySettings(true);
+      setSettingsSnapshot(refreshedSettings);
       setFeedback(createSuccessFeedback(t("pages.settings.feedback.logoSuccess")));
     } catch {
       setFeedback(createErrorFeedback(t("pages.settings.feedback.logoFailed")));
@@ -174,7 +228,8 @@ export function useSettingsPage() {
   }
 
   return {
-    companySettings,
+    companySettings: activeCompanySettings,
+    emailDeliveryStatus,
     feedback,
     form,
     handleLogoChange,

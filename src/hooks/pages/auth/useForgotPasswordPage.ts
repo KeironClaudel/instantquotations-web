@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { forgotPassword } from "@/lib/api/authApi";
@@ -8,30 +7,6 @@ type FeedbackState = {
   type: "success" | "error";
   message: string;
 } | null;
-
-function getApiErrorMessage(error: unknown, fallbackMessage: string): string {
-  if (!axios.isAxiosError(error)) {
-    return fallbackMessage;
-  }
-
-  const responseData = error.response?.data;
-
-  if (typeof responseData === "string" && responseData.trim()) {
-    return responseData;
-  }
-
-  if (
-    responseData &&
-    typeof responseData === "object" &&
-    "message" in responseData &&
-    typeof responseData.message === "string" &&
-    responseData.message.trim()
-  ) {
-    return responseData.message;
-  }
-
-  return fallbackMessage;
-}
 
 export function useForgotPasswordPage() {
   const { t } = useTranslation();
@@ -50,10 +25,8 @@ export function useForgotPasswordPage() {
       });
 
       setFeedback(createSuccessFeedback(response.message));
-    } catch (error) {
-      setFeedback(
-        createErrorFeedback(getApiErrorMessage(error, t("pages.forgotPassword.feedbackError"))),
-      );
+    } catch {
+      setFeedback(createErrorFeedback(t("pages.forgotPassword.feedbackError")));
     } finally {
       setIsSubmitting(false);
     }

@@ -15,4 +15,9 @@ export type CompanySettings = {
   taxPercentage: number;
   currencySymbol: string;
   taxLabel: string;
+  hasResendApiKeyConfigured: boolean;
+  isResendEmailDeliveryConfigured: boolean;
+  resendSenderEmail: string | null;
+  resendSenderName: string | null;
+  resendReplyToEmail: string | null;
 };

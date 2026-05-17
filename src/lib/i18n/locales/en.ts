@@ -454,7 +454,32 @@ export const en = {
       badge: "Company Configuration",
       title: "Company Settings",
       description:
-        "Manage your branding, tax settings, contact details, and document configuration.",
+        "Manage your branding, tax settings, contact details, document rules, and tenant email delivery configuration.",
+      emailDelivery: "Email Delivery",
+      emailDeliveryDescription:
+        "Each company uses its own Resend configuration. The API key is stored encrypted and is never shown back in full.",
+      emailDeliveryStatus: {
+        ready: {
+          label: "Ready to send",
+          help: "This company already has an API key and sender email configured for email delivery.",
+        },
+        incomplete: {
+          label: "Incomplete setup",
+          help: "An API key is already stored, but the sender email still needs to be completed before email delivery can work.",
+        },
+        missing: {
+          label: "Not configured",
+          help: "This company cannot send emails yet. Save a Resend API key and sender email to enable it.",
+        },
+      },
+      resendApiKey: "Resend API key",
+      apiKeyConfiguredPlaceholder: "API key configured",
+      apiKeyConfiguredHelp: "Leave this blank to keep the current API key, or enter a new one to replace it.",
+      apiKeyMissingHelp: "Enter a Resend API key to enable email delivery for this company.",
+      clearResendApiKey: "Remove the saved API key",
+      resendSenderEmail: "From email",
+      resendSenderName: "Sender name",
+      resendReplyToEmail: "Reply-to email",
       brandingRules: "Branding and Document Rules",
       primaryColor: "Primary Color",
       secondaryColor: "Secondary Color",
@@ -472,6 +497,8 @@ export const en = {
       feedback: {
         loadFailed: "Failed to load company settings.",
         taxRange: "Tax percentage must be between 0 and 100.",
+        resendApiKeyRequired: "You must enter a Resend API key or keep one already configured.",
+        resendSenderEmailRequired: "The Resend sender email is required to save the settings.",
         saveFailed: "Failed to update company settings.",
         saveSuccess: "Company settings updated successfully.",
         logoFailed: "Failed to update the company logo.",
@@ -480,3 +507,5 @@ export const en = {
     },
   },
 } as const;
+
+

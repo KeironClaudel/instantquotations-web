@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "@/lib/api/authApi";
@@ -10,40 +9,25 @@ type FeedbackState = {
   message: string;
 } | null;
 
-function getApiErrorMessage(error: unknown, fallbackMessage: string): string {
-  if (!axios.isAxiosError(error)) {
-    return fallbackMessage;
-  }
-
-  const responseData = error.response?.data;
-
-  if (typeof responseData === "string" && responseData.trim()) {
-    return responseData;
-  }
-
-  if (
-    responseData &&
-    typeof responseData === "object" &&
-    "message" in responseData &&
-    typeof responseData.message === "string" &&
-    responseData.message.trim()
-  ) {
-    return responseData.message;
-  }
-
-  return fallbackMessage;
-}
-
 export function useResetPasswordPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token")?.trim() ?? "";
+  const [token] = useState(() => searchParams.get("token")?.trim() ?? "");
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [feedback, setFeedback] = useState<FeedbackState>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.search || !token) {
+      return;
+    }
+
+    const cleanUrl = `${window.location.pathname}${window.location.hash}`;
+    window.history.replaceState(window.history.state, "", cleanUrl);
+  }, [token]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,10 +56,8 @@ export function useResetPasswordPage() {
       window.setTimeout(() => {
         navigate("/login", { replace: true });
       }, 1200);
-    } catch (error) {
-      setFeedback(
-        createErrorFeedback(getApiErrorMessage(error, t("pages.resetPassword.feedback.failed"))),
-      );
+    } catch {
+      setFeedback(createErrorFeedback(t("pages.resetPassword.feedback.failed")));
     } finally {
       setIsSubmitting(false);
     }

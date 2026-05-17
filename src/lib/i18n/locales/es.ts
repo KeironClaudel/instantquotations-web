@@ -454,7 +454,32 @@ export const es = {
       badge: "Configuracion de la empresa",
       title: "Ajustes de empresa",
       description:
-        "Administra tu imagen, configuracion fiscal, datos de contacto y reglas de documentos.",
+        "Administra tu imagen, configuracion fiscal, datos de contacto, reglas de documentos y la salida de correos por empresa.",
+      emailDelivery: "Entrega de correos",
+      emailDeliveryDescription:
+        "Cada empresa usa su propia configuracion de Resend. El API key se guarda cifrado y nunca vuelve a mostrarse completo.",
+      emailDeliveryStatus: {
+        ready: {
+          label: "Listo para enviar",
+          help: "Esta empresa ya tiene API key y correo remitente configurados para enviar correos.",
+        },
+        incomplete: {
+          label: "Configuracion incompleta",
+          help: "Ya existe un API key guardado, pero aun falta completar el correo remitente para habilitar el envio.",
+        },
+        missing: {
+          label: "No configurado",
+          help: "Esta empresa todavia no puede enviar correos. Guarda un API key de Resend y un correo remitente para activarlo.",
+        },
+      },
+      resendApiKey: "Resend API key",
+      apiKeyConfiguredPlaceholder: "API key configurado",
+      apiKeyConfiguredHelp: "Deja este campo vacio para mantener el API key actual o escribe uno nuevo para reemplazarlo.",
+      apiKeyMissingHelp: "Ingresa un API key de Resend para habilitar el envio de correos de esta empresa.",
+      clearResendApiKey: "Eliminar el API key guardado",
+      resendSenderEmail: "From email",
+      resendSenderName: "Sender name",
+      resendReplyToEmail: "Reply-to email",
       brandingRules: "Imagen y reglas del documento",
       primaryColor: "Color primario",
       secondaryColor: "Color secundario",
@@ -472,6 +497,8 @@ export const es = {
       feedback: {
         loadFailed: "No se pudieron cargar los ajustes de la empresa.",
         taxRange: "El porcentaje de impuesto debe estar entre 0 y 100.",
+        resendApiKeyRequired: "Debes ingresar un API key de Resend o conservar uno ya configurado.",
+        resendSenderEmailRequired: "El correo remitente de Resend es obligatorio para guardar los ajustes.",
         saveFailed: "No se pudieron actualizar los ajustes de la empresa.",
         saveSuccess: "Los ajustes de la empresa se actualizaron correctamente.",
         logoFailed: "No se pudo actualizar el logo de la empresa.",
@@ -480,3 +507,5 @@ export const es = {
     },
   },
 } as const;
+
+

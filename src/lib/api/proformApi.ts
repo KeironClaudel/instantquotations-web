@@ -1,6 +1,5 @@
 import axios from "axios";
 import { apiClient } from "@/lib/api/apiClient";
-import { getCookieValue } from "@/lib/utils/cookies";
 import { enqueueRequest } from "@/lib/offline/requestQueue";
 import type { CreateProformRequest, CreateProformResult } from "@/types/proform";
 
@@ -59,21 +58,14 @@ export async function createProform(
       throw error;
     }
 
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
-    const csrfToken = getCookieValue("XSRF-TOKEN");
-
-    if (csrfToken) {
-      headers["X-CSRF-TOKEN"] = csrfToken;
-    }
-
     const queuedRequest = await enqueueRequest({
       kind: "create-proform",
       url: buildCreateProformUrl(),
       method: "POST",
-      headers,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(request),
       companyId: options.queueContext.companyId,
       userId: options.queueContext.userId,

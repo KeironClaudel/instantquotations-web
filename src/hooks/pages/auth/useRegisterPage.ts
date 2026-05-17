@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -55,30 +54,6 @@ function createInitialFormState(defaultTerms: string, defaultTaxLabel: string): 
     taxPercentage: "13",
     termsAndConditions: defaultTerms,
   };
-}
-
-function getRegisterErrorMessage(error: unknown, fallbackMessage: string): string {
-  if (!axios.isAxiosError(error)) {
-    return fallbackMessage;
-  }
-
-  const responseData = error.response?.data;
-
-  if (typeof responseData === "string" && responseData.trim()) {
-    return responseData;
-  }
-
-  if (
-    responseData &&
-    typeof responseData === "object" &&
-    "message" in responseData &&
-    typeof responseData.message === "string" &&
-    responseData.message.trim()
-  ) {
-    return responseData.message;
-  }
-
-  return fallbackMessage;
 }
 
 export function useRegisterPage() {
@@ -213,12 +188,8 @@ export function useRegisterPage() {
       window.setTimeout(() => {
         navigate("/login", { replace: true });
       }, 900);
-    } catch (error) {
-      setFeedback(
-        createErrorFeedback(
-          getRegisterErrorMessage(error, t("pages.register.feedback.failed")),
-        ),
-      );
+    } catch {
+      setFeedback(createErrorFeedback(t("pages.register.feedback.failed")));
     } finally {
       submitLockRef.current = false;
       setIsSubmitting(false);

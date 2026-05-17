@@ -85,6 +85,7 @@ export function useOnboardingCompanyPage() {
       await updateCompanySettings({
         accentColor: companySettings?.accentColor ?? "#dbe2ff",
         address: companySettings?.address ?? null,
+        clearResendApiKey: false,
         currencySymbol: currencySymbol.trim(),
         displayName: displayName.trim(),
         email: companySettings?.email ?? null,
@@ -93,6 +94,10 @@ export function useOnboardingCompanyPage() {
         phone: companySettings?.phone ?? null,
         primaryColor: companySettings?.primaryColor ?? "#1B2D5A",
         proformPrefix: companySettings?.proformPrefix?.trim() || "PRO",
+        resendApiKey: null,
+        resendReplyToEmail: companySettings?.resendReplyToEmail ?? null,
+        resendSenderEmail: companySettings?.resendSenderEmail ?? null,
+        resendSenderName: companySettings?.resendSenderName ?? null,
         secondaryColor: companySettings?.secondaryColor ?? "#e6c7f0",
         taxLabel: taxLabel.trim() || t("common.defaults.taxLabel"),
         taxPercentage: parsedTaxPercentage,

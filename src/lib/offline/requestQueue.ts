@@ -1,4 +1,5 @@
 import {
+  clearQueueRecords,
   clearQueueSessionContext,
   deleteQueueRecord,
   getAllQueueRecords,
@@ -8,11 +9,12 @@ import {
   setQueueSessionContext,
   type QueueSessionContext,
 } from "@/lib/offline/requestQueueDb";
+import { getCookieValue } from "@/lib/utils/cookies";
 
 const BASE_RETRY_DELAY_MS = 30_000;
 const MAX_RETRY_DELAY_MS = 15 * 60_000;
 const MAX_RETRY_ATTEMPTS = 8;
-const MAX_QUEUE_AGE_MS = 24 * 60 * 60_000;
+const MAX_QUEUE_AGE_MS = 60 * 60_000;
 
 export const REQUEST_QUEUE_UPDATED_EVENT = "request-queue:updated";
 export const PROFORM_QUEUE_SYNC_TAG = "instantproforms:proform-create-sync";
@@ -63,6 +65,43 @@ function notifyQueueUpdated() {
   }
 
   window.dispatchEvent(new Event(REQUEST_QUEUE_UPDATED_EVENT));
+}
+
+function isWindowContext() {
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
+
+function requiresCsrfHeader(method: QueueRequestConfig["method"]) {
+  return ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+}
+
+function sanitizePersistedHeaders(headers?: Record<string, string>): Record<string, string> {
+  if (!headers) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(headers).filter(([key]) => {
+      const normalizedKey = key.trim().toLowerCase();
+      return normalizedKey !== "x-csrf-token" &&
+        normalizedKey !== "authorization" &&
+        normalizedKey !== "cookie";
+    }),
+  );
+}
+
+function buildReplayHeaders(record: QueuedRequestRecord): Headers {
+  const headers = new Headers(record.headers);
+
+  if (requiresCsrfHeader(record.method)) {
+    const csrfToken = getCookieValue("XSRF-TOKEN");
+
+    if (csrfToken) {
+      headers.set("X-CSRF-TOKEN", csrfToken);
+    }
+  }
+
+  return headers;
 }
 
 async function createDedupeKey(config: QueueRequestConfig): Promise<string> {
@@ -145,7 +184,7 @@ export async function enqueueRequest(
     kind: requestConfig.kind,
     url: requestConfig.url,
     method: requestConfig.method,
-    headers: requestConfig.headers ?? {},
+    headers: sanitizePersistedHeaders(requestConfig.headers),
     body: requestConfig.body ?? null,
     companyId: requestConfig.companyId,
     userId: requestConfig.userId,
@@ -215,12 +254,16 @@ export async function processQueue(options?: ProcessQueueOptions): Promise<Proce
       continue;
     }
 
+    if (requiresCsrfHeader(record.method) && !isWindowContext()) {
+      continue;
+    }
+
     processed += 1;
 
     try {
       const response = await fetch(record.url, {
         method: record.method,
-        headers: record.headers,
+        headers: buildReplayHeaders(record),
         body: record.body,
         credentials: "include",
         mode: "cors",
@@ -282,6 +325,19 @@ export async function processQueue(options?: ProcessQueueOptions): Promise<Proce
 export async function syncQueueSessionContext(
   sessionContext: QueueSessionContext | null,
 ): Promise<void> {
+  const previousSessionContext = await getQueueSessionContext();
+  const shouldClearQueue =
+    !sessionContext ||
+    (
+      previousSessionContext !== null &&
+      (previousSessionContext.companyId !== sessionContext.companyId ||
+        previousSessionContext.userId !== sessionContext.userId)
+    );
+
+  if (shouldClearQueue) {
+    await clearQueueRecords();
+  }
+
   if (!sessionContext) {
     await clearQueueSessionContext();
     return;

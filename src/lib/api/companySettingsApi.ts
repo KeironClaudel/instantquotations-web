@@ -18,6 +18,11 @@ export type UpdateCompanySettingsRequest = {
   taxPercentage: number;
   currencySymbol: string;
   taxLabel: string;
+  resendApiKey: string | null;
+  clearResendApiKey: boolean;
+  resendSenderEmail: string | null;
+  resendSenderName: string | null;
+  resendReplyToEmail: string | null;
 };
 
 function buildCompanySettingsUrl(forceFresh?: boolean): string {

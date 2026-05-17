@@ -100,6 +100,12 @@ export async function deleteQueueRecord(id: string): Promise<void> {
   });
 }
 
+export async function clearQueueRecords(): Promise<void> {
+  await withStore(REQUEST_STORE_NAME, "readwrite", async (store) => {
+    await toPromise(store.clear());
+  });
+}
+
 export async function getQueueSessionContext(): Promise<QueueSessionContext | null> {
   return withStore(META_STORE_NAME, "readonly", async (store) => {
     const record = await toPromise(

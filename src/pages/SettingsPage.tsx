@@ -6,6 +6,7 @@ export function SettingsPage() {
   const { t } = useTranslation();
   const {
     companySettings,
+    emailDeliveryStatus,
     feedback,
     form,
     handleLogoChange,
@@ -22,6 +23,18 @@ export function SettingsPage() {
 
   const textareaClassName =
     "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+
+  const emailDeliveryStatusClassName = {
+    ready:
+      "border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-200",
+    incomplete:
+      "border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/70 dark:bg-amber-950/40 dark:text-amber-200",
+    missing:
+      "border border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200",
+  }[emailDeliveryStatus];
+
+  const emailDeliveryStatusLabel = t(`pages.settings.emailDeliveryStatus.${emailDeliveryStatus}.label`);
+  const emailDeliveryStatusHelp = t(`pages.settings.emailDeliveryStatus.${emailDeliveryStatus}.help`);
 
   if (isLoading) {
     return <PageLoader message={t("pages.settings.loading")} />;
@@ -113,6 +126,90 @@ export function SettingsPage() {
                   className={textareaClassName}
                   value={form.termsAndConditions}
                   onChange={(event) => updateField("termsAndConditions", event.target.value)}
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+            <div className="mb-5 flex flex-wrap items-center gap-3">
+              <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                {t("pages.settings.emailDelivery")}
+              </h2>
+
+              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${emailDeliveryStatusClassName}`}>
+                {emailDeliveryStatusLabel}
+              </span>
+            </div>
+
+            <p className="text-sm leading-6 text-slate-600 dark:text-slate-400">
+              {t("pages.settings.emailDeliveryDescription")}
+            </p>
+
+            <p className="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">
+              {emailDeliveryStatusHelp}
+            </p>
+
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium">{t("pages.settings.resendApiKey")}</label>
+                <input
+                  type="password"
+                  className={inputClassName}
+                  value={form.resendApiKey}
+                  onChange={(event) => updateField("resendApiKey", event.target.value)}
+                  placeholder={companySettings?.hasResendApiKeyConfigured ? t("pages.settings.apiKeyConfiguredPlaceholder") : "re_..."}
+                  autoComplete="new-password"
+                />
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {companySettings?.hasResendApiKeyConfigured
+                    ? t("pages.settings.apiKeyConfiguredHelp")
+                    : t("pages.settings.apiKeyMissingHelp")}
+                </p>
+              </div>
+
+              <div className="md:col-span-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                <input
+                  id="clearResendApiKey"
+                  type="checkbox"
+                  checked={form.clearResendApiKey}
+                  onChange={(event) => updateField("clearResendApiKey", event.target.checked)}
+                  className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                />
+                <label htmlFor="clearResendApiKey" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {t("pages.settings.clearResendApiKey")}
+                </label>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">{t("pages.settings.resendSenderEmail")}</label>
+                <input
+                  type="email"
+                  className={inputClassName}
+                  value={form.resendSenderEmail}
+                  onChange={(event) => updateField("resendSenderEmail", event.target.value)}
+                  placeholder="noreply@tu-dominio.com"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">{t("pages.settings.resendSenderName")}</label>
+                <input
+                  className={inputClassName}
+                  value={form.resendSenderName}
+                  onChange={(event) => updateField("resendSenderName", event.target.value)}
+                  placeholder={t("common.defaults.companyName")}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium">{t("pages.settings.resendReplyToEmail")}</label>
+                <input
+                  type="email"
+                  className={inputClassName}
+                  value={form.resendReplyToEmail}
+                  onChange={(event) => updateField("resendReplyToEmail", event.target.value)}
+                  placeholder="soporte@tu-dominio.com"
                 />
               </div>
             </div>

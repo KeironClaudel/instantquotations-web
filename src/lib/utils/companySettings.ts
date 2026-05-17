@@ -58,6 +58,11 @@ function resolveCompanyAssetUrl(url: string | null): string | null {
 export function normalizeCompanySettings(settings: CompanySettings): CompanySettings {
   return {
     ...settings,
+    hasResendApiKeyConfigured: Boolean(settings.hasResendApiKeyConfigured),
+    isResendEmailDeliveryConfigured: Boolean(settings.isResendEmailDeliveryConfigured),
+    resendReplyToEmail: settings.resendReplyToEmail ?? null,
+    resendSenderEmail: settings.resendSenderEmail ?? null,
+    resendSenderName: settings.resendSenderName ?? null,
     logoUrl: resolveCompanyAssetUrl(settings.logoUrl),
   };
 }
