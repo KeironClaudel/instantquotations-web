@@ -482,13 +482,22 @@ export function NewProformPage() {
           </div>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-        >
-          {isSubmitting ? t("pages.newProform.creatingProform") : t("pages.newProform.createProform")}
-        </button>
+        <div className="grid gap-3 md:grid-cols-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+          >
+            {isSubmitting ? t("pages.newProform.creatingProform") : t("pages.newProform.createProform")}
+          </button>
+
+          <Link
+            to="/app/proforms"
+            className="flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+          >
+            {t("pages.newProform.viewProforms")}
+          </Link>
+        </div>
 
         {queuedNotice ? (
           <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800 shadow-sm">
@@ -618,6 +627,7 @@ export function NewProformPage() {
               >
                 {t("pages.newProform.createAnother")}
               </button>
+
             </div>
 
             {shareUrlValue ? (

@@ -242,6 +242,7 @@ export const es = {
       share: "Compartir",
       sharing: "Compartiendo...",
       createAnother: "Crear otra proforma",
+      viewProforms: "Ver proformas",
       shareUrl: "URL para compartir",
       copying: "Copiando...",
       sendByEmail: "Enviar por correo",

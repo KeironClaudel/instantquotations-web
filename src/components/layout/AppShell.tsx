@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/providers/useAuth";
 import { isCompanySetupComplete } from "@/lib/utils/companySetup";
@@ -42,7 +42,10 @@ export function AppShell() {
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex min-w-0 items-center gap-3">
+            <Link
+              to="/app"
+              className="flex min-w-0 items-center gap-3 rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-slate-300 dark:focus-visible:ring-slate-700"
+            >
               {companySettings?.logoUrl ? (
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
                   <img
@@ -68,7 +71,7 @@ export function AppShell() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
 
             <div className="hidden items-center gap-2 sm:flex">
               <LanguageSwitcher compact />

@@ -241,6 +241,7 @@ export const en = {
       share: "Share",
       sharing: "Sharing...",
       createAnother: "Create Another Proform",
+      viewProforms: "View Proforms",
       shareUrl: "Share URL",
       copying: "Copying...",
       sendByEmail: "Send by Email",
