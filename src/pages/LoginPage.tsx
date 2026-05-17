@@ -87,10 +87,7 @@ export function LoginPage() {
           </button>
 
           <div className="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
-            {t("pages.login.notRegistered")}{" "}
-            <Link to="/register" className="font-medium text-slate-900 underline dark:text-slate-100">
-              {t("pages.login.registerNow")}
-            </Link>
+            {t("pages.login.accessManagedByAdmin")}
           </div>
         </form>
       </div>

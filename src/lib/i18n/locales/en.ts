@@ -68,6 +68,7 @@ export const en = {
       newProform: "New Proform",
       prefix: "Prefix",
       proforms: "Proforms",
+      registerCompany: "Register company",
       settings: "Settings",
       tax: "Tax",
       workspace: "Workspace",
@@ -182,8 +183,7 @@ export const en = {
       signIn: "Sign in",
       signingIn: "Signing in...",
       invalidCredentials: "Invalid credentials or session setup failed.",
-      notRegistered: "Not registered yet?",
-      registerNow: "Register now",
+      accessManagedByAdmin: "New workspace access is managed by the platform administrator.",
     },
     newProform: {
       badge: "Proform Workflow",
@@ -431,6 +431,16 @@ export const en = {
         taxRange: "Tax percentage must be between 0 and 100.",
         success: "Company registered successfully. Redirecting to login...",
         failed: "Failed to register the company.",
+      },
+    },
+    adminCompanyRegistration: {
+      badge: "Admin panel",
+      title: "Register a new company",
+      description:
+        "Create a new workspace for a company or independent professional from your platform panel.",
+      feedback: {
+        success: "The company was registered successfully and can now sign in.",
+        failed: "Failed to register the company from the admin panel.",
       },
     },
     resetPassword: {

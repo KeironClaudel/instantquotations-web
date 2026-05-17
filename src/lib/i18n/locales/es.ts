@@ -68,6 +68,7 @@ export const es = {
       newProform: "Nueva proforma",
       prefix: "Prefijo",
       proforms: "Proformas",
+      registerCompany: "Registrar empresa",
       settings: "Configuracion",
       tax: "Impuesto",
       workspace: "Espacio de trabajo",
@@ -182,8 +183,7 @@ export const es = {
       signIn: "Entrar",
       signingIn: "Ingresando...",
       invalidCredentials: "Credenciales invalidas o fallo la configuracion de sesion.",
-      notRegistered: "Aun no te has registrado?",
-      registerNow: "Registrate ahora",
+      accessManagedByAdmin: "El acceso a nuevos espacios de trabajo es gestionado por el administrador de la plataforma.",
     },
     newProform: {
       badge: "Flujo de proformas",
@@ -431,6 +431,16 @@ export const es = {
         taxRange: "El porcentaje de impuesto debe estar entre 0 y 100.",
         success: "La empresa se registro correctamente. Redirigiendo al inicio de sesion...",
         failed: "No se pudo registrar la empresa.",
+      },
+    },
+    adminCompanyRegistration: {
+      badge: "Panel de administrador",
+      title: "Registrar nueva empresa",
+      description:
+        "Crea un nuevo espacio de trabajo para una empresa o profesional desde tu panel de plataforma.",
+      feedback: {
+        success: "La empresa se registro correctamente y ya puede iniciar sesion.",
+        failed: "No se pudo registrar la empresa desde el panel administrativo.",
       },
     },
     resetPassword: {

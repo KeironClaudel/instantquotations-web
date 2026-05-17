@@ -4,6 +4,7 @@ export type AuthUser = {
   email: string;
   role: string;
   companyId: string;
+  isPlatformAdmin: boolean;
 };
 
 export type LoginRequest = {

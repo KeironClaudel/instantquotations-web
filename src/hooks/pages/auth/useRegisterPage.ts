@@ -56,10 +56,16 @@ function createInitialFormState(defaultTerms: string, defaultTaxLabel: string): 
   };
 }
 
-export function useRegisterPage() {
+type UseRegisterPageOptions = {
+  mode?: "public" | "admin";
+};
+
+export function useRegisterPage(options?: UseRegisterPageOptions) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submitLockRef = useRef(false);
+  const mode = options?.mode ?? "public";
+  const isAdminMode = mode === "admin";
 
   const [form, setForm] = useState<RegisterFormState>(() =>
     createInitialFormState(
@@ -183,13 +189,30 @@ export function useRegisterPage() {
         password: form.password,
       });
 
-      setFeedback(createSuccessFeedback(t("pages.register.feedback.success")));
+      if (isAdminMode) {
+        setForm(
+          createInitialFormState(
+            t("pages.register.defaults.terms"),
+            t("common.defaults.taxLabel"),
+          ),
+        );
+        setLogoFile(null);
+        setFeedback(createSuccessFeedback(t("pages.adminCompanyRegistration.feedback.success")));
+      } else {
+        setFeedback(createSuccessFeedback(t("pages.register.feedback.success")));
 
-      window.setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 900);
+        window.setTimeout(() => {
+          navigate("/login", { replace: true });
+        }, 900);
+      }
     } catch {
-      setFeedback(createErrorFeedback(t("pages.register.feedback.failed")));
+      setFeedback(
+        createErrorFeedback(
+          isAdminMode
+            ? t("pages.adminCompanyRegistration.feedback.failed")
+            : t("pages.register.feedback.failed"),
+        ),
+      );
     } finally {
       submitLockRef.current = false;
       setIsSubmitting(false);

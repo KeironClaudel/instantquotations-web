@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProtectedRoute } from "@/app/router/ProtectedRoute";
+import { PlatformAdminRoute } from "@/app/router/PlatformAdminRoute";
 import { LoginPage } from "@/pages/LoginPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "/forgot-password",
@@ -69,6 +70,14 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "admin/companies/new",
+        element: (
+          <PlatformAdminRoute>
+            <RegisterPage mode="admin" />
+          </PlatformAdminRoute>
+        ),
       },
     ],
   },

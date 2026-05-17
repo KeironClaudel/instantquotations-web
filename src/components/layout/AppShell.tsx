@@ -25,7 +25,7 @@ function setupLinkClassName({ isActive }: { isActive: boolean }) {
 
 export function AppShell() {
   const { t } = useTranslation();
-  const { companySettings, logout } = useAuth();
+  const { companySettings, logout, user } = useAuth();
   const isSetupComplete = isCompanySetupComplete(companySettings);
 
   return (
@@ -85,6 +85,12 @@ export function AppShell() {
                 {t("components.appShell.settings")}
               </NavLink>
 
+              {user?.isPlatformAdmin ? (
+                <NavLink to="/app/admin/companies/new" className={navLinkClassName}>
+                  {t("components.appShell.registerCompany")}
+                </NavLink>
+              ) : null}
+
               {!isSetupComplete ? (
                 <NavLink to="/app/onboarding/company" className={setupLinkClassName}>
                   {t("components.appShell.completeSetup")}
@@ -123,6 +129,12 @@ export function AppShell() {
             <NavLink to="/app/settings" className={navLinkClassName}>
               {t("components.appShell.settings")}
             </NavLink>
+
+            {user?.isPlatformAdmin ? (
+              <NavLink to="/app/admin/companies/new" className={navLinkClassName}>
+                {t("components.appShell.registerCompany")}
+              </NavLink>
+            ) : null}
 
             {!isSetupComplete ? (
               <NavLink to="/app/onboarding/company" className={setupLinkClassName}>
