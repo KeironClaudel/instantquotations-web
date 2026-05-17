@@ -143,7 +143,13 @@ export function AppShell() {
             </div>
           </div>
 
-          <div className="relative flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher compact />
+              <ThemeSwitcher compact />
+            </div>
+
+            <div className="relative">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen((current) => !current)}
@@ -160,10 +166,17 @@ export function AppShell() {
 
             {isMobileMenuOpen ? (
               <div className="absolute right-0 top-14 z-40 flex w-64 flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-                <div className="flex items-center gap-2">
-                  <LanguageSwitcher compact />
-                  <ThemeSwitcher compact />
-                </div>
+                {primaryLinks.map((link) => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.end}
+                    className={navLinkClassName}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
 
                 <NavLink to="/app/settings" className={navLinkClassName} onClick={() => setIsMobileMenuOpen(false)}>
                   {t("components.appShell.settings")}
@@ -198,16 +211,7 @@ export function AppShell() {
                 </button>
               </div>
             ) : null}
-          </div>
-        </div>
-
-        <div className="border-t border-slate-200 bg-white md:hidden dark:border-slate-800 dark:bg-slate-950">
-          <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6">
-            {primaryLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => `${navLinkClassName({ isActive })} whitespace-nowrap`}>
-                {link.label}
-              </NavLink>
-            ))}
+            </div>
           </div>
         </div>
       </header>
