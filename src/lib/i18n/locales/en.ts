@@ -179,6 +179,7 @@ export const en = {
       title: "Sign in",
       description: "Access your InstantProforms workspace.",
       password: "Password",
+      rememberMe: "Remember me",
       forgotPassword: "Forgot password?",
       signIn: "Sign in",
       signingIn: "Signing in...",

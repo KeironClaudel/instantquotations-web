@@ -13,7 +13,9 @@ export function LoginPage() {
     isSubmitting,
     setEmail,
     setPassword,
+    setRememberMe,
     password,
+    rememberMe,
     shouldRedirect,
   } = useLoginPage();
 
@@ -71,6 +73,16 @@ export function LoginPage() {
               </Link>
             </div>
           </div>
+
+          <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(event) => setRememberMe(event.target.checked)}
+              className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            />
+            <span>{t("pages.login.rememberMe")}</span>
+          </label>
 
           {errorMessage ? (
             <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

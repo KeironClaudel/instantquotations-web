@@ -180,6 +180,7 @@ export const es = {
       title: "Iniciar sesión",
       description: "Accede a tu espacio de trabajo de InstantProforms.",
       password: "Contraseña",
+      rememberMe: "Recordarme",
       forgotPassword: "¿Olvidaste tu contraseña?",
       signIn: "Entrar",
       signingIn: "Ingresando...",

@@ -17,6 +17,7 @@ export function useLoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,6 +34,7 @@ export function useLoginPage() {
       await login({
         email,
         password,
+        rememberMe,
       });
 
       navigate(redirectPath, { replace: true });
@@ -50,8 +52,10 @@ export function useLoginPage() {
     isLoading,
     isSubmitting,
     password,
+    rememberMe,
     setEmail,
     setPassword,
+    setRememberMe,
     shouldRedirect: !isLoading && isAuthenticated,
   };
 }
