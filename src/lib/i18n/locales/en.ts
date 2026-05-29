@@ -359,6 +359,11 @@ export const en = {
         "Try adjusting the client, status, or date filters to broaden the results.",
       issueLoadFailed: "Failed to load proforms. Please try again later.",
       clientPrefix: "Client:",
+      paginationSummary: "Showing {{start}}-{{end}} of {{total}} proforms",
+      perPage: "Per page",
+      previous: "Previous",
+      next: "Next",
+      pageOf: "Page {{page}} of {{totalPages}}",
     },
     clients: {
       loading: "Loading clients...",

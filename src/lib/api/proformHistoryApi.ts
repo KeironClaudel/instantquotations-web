@@ -1,23 +1,46 @@
 import { apiClient } from "@/lib/api/apiClient";
 import type { ProformDetails, ProformListItem } from "@/types/proformHistory";
 
-type PagedResult<T> = {
+export type PagedResult<T> = {
   items: T[];
   page?: number;
   pageSize?: number;
   totalCount?: number;
 };
 
-export async function getProforms(): Promise<ProformListItem[]> {
-  const { data } = await apiClient.get<ProformListItem[] | PagedResult<ProformListItem>>(
-    "/api/Proforms",
-  );
+export type GetProformsFilters = {
+  page?: number;
+  pageSize?: number;
+  clientName?: string;
+  status?: string;
+  fromDate?: string;
+  toDate?: string;
+};
+
+export async function getProforms(
+  filters?: GetProformsFilters,
+): Promise<PagedResult<ProformListItem>> {
+  const { data } = await apiClient.get<ProformListItem[] | PagedResult<ProformListItem>>("/api/Proforms", {
+    params: {
+      page: filters?.page,
+      pageSize: filters?.pageSize,
+      clientName: filters?.clientName,
+      status: filters?.status,
+      fromDate: filters?.fromDate,
+      toDate: filters?.toDate,
+    },
+  });
 
   if (Array.isArray(data)) {
-    return data;
+    return {
+      items: data,
+      page: filters?.page ?? 1,
+      pageSize: data.length,
+      totalCount: data.length,
+    };
   }
 
-  return data.items;
+  return data;
 }
 
 export async function getProformById(proformId: string): Promise<ProformDetails> {

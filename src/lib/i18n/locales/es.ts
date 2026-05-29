@@ -360,6 +360,11 @@ export const es = {
         "Prueba ajustando los filtros de cliente, estado o fecha para ampliar los resultados.",
       issueLoadFailed: "No se pudieron cargar las proformas. Inténtalo de nuevo más tarde.",
       clientPrefix: "Cliente:",
+      paginationSummary: "Mostrando {{start}}-{{end}} de {{total}} proformas",
+      perPage: "Por página",
+      previous: "Anterior",
+      next: "Siguiente",
+      pageOf: "Página {{page}} de {{totalPages}}",
     },
     clients: {
       loading: "Cargando clientes...",

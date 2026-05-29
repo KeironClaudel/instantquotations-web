@@ -26,21 +26,33 @@ export function ProformsListPage() {
   const {
     clearFilters,
     clientFilter,
+    currentPage,
     companySettings,
+    endItem,
     feedback,
     filteredProforms,
     fromDateFilter,
+    goToNextPage,
+    goToPreviousPage,
     hasActiveFilters,
     isLoading,
+    isOnFirstPage,
+    isOnLastPage,
     proforms,
+    pageSize,
+    pageSizeOptions,
     setClientFilter,
     setFromDateFilter,
+    setPageSize,
     setStatusFilter,
     setToDateFilter,
+    startItem,
     statusFilter,
     statusOptions,
     toDateFilter,
     todayDateValue,
+    totalCount,
+    totalPages,
   } = useProformsListPage();
 
   if (isLoading) {
@@ -137,7 +149,7 @@ export function ProformsListPage() {
         </div>
       </section>
 
-      {proforms.length === 0 ? (
+      {!hasActiveFilters && proforms.length === 0 ? (
         <EmptyState
           title={t("pages.proformsList.noProformsTitle")}
           description={t("pages.proformsList.noProformsDescription")}
@@ -166,6 +178,57 @@ export function ProformsListPage() {
         />
       ) : (
         <div className="space-y-4">
+          <section className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-slate-600 dark:text-slate-400">
+              {t("pages.proformsList.paginationSummary", {
+                start: startItem,
+                end: endItem,
+                total: totalCount,
+              })}
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                <span>{t("pages.proformsList.perPage")}</span>
+                <select
+                  value={pageSize}
+                  onChange={(event) => setPageSize(Number(event.target.value) as (typeof pageSizeOptions)[number])}
+                  className="rounded-2xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                >
+                  {pageSizeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goToPreviousPage}
+                  disabled={isOnFirstPage}
+                  className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                >
+                  {t("pages.proformsList.previous")}
+                </button>
+
+                <span className="min-w-[110px] text-center text-sm text-slate-600 dark:text-slate-400">
+                  {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={goToNextPage}
+                  disabled={isOnLastPage}
+                  className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                >
+                  {t("pages.proformsList.next")}
+                </button>
+              </div>
+            </div>
+          </section>
+
           {filteredProforms.map((proform) => {
             const currencySymbol = getProformCurrencySymbol(proform.currency);
 
