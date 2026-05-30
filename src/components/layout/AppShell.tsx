@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/providers/useAuth";
@@ -57,6 +57,23 @@ export function AppShell() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userInitials = getUserInitials(user?.fullName);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [isMobileMenuOpen]);
+
   const primaryLinks = [
     {
       to: "/app",
@@ -84,14 +101,11 @@ export function AppShell() {
 
   return (
     <div className="app-shell">
-      <header className="app-topbar sticky top-0 z-40">
+      <header className="app-topbar sticky top-0 z-[110]">
         <div className="mx-auto flex w-full max-w-none flex-col gap-3 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8 lg:py-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="app-card flex min-w-0 items-center gap-3 px-3 py-3 sm:px-5 lg:w-auto lg:min-w-[18rem] lg:max-w-[24rem] lg:flex-none">
-              <Link
-                to="/app"
-                className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl"
-              >
+              <Link to="/app" className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl">
                 {companySettings?.logoUrl ? (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.1rem] border border-[var(--ip-border)] bg-white/80 shadow-sm sm:h-14 sm:w-14 sm:rounded-[1.25rem] dark:bg-slate-950/70">
                     <img
@@ -172,7 +186,9 @@ export function AppShell() {
 
               <NavLink
                 to="/app/settings"
-                className={(state) => withFixedWidth(utilityLinkClassName(state), "lg:min-w-[8.75rem] lg:justify-center")}
+                className={(state) =>
+                  withFixedWidth(utilityLinkClassName(state), "lg:min-w-[8.75rem] lg:justify-center")
+                }
               >
                 {t("components.appShell.settings")}
               </NavLink>
@@ -180,7 +196,9 @@ export function AppShell() {
               {user?.isPlatformAdmin ? (
                 <NavLink
                   to="/app/admin/companies/new"
-                  className={(state) => withFixedWidth(utilityLinkClassName(state), "lg:min-w-[11.5rem] lg:justify-center")}
+                  className={(state) =>
+                    withFixedWidth(utilityLinkClassName(state), "lg:min-w-[11.5rem] lg:justify-center")
+                  }
                 >
                   {t("components.appShell.registerCompany")}
                 </NavLink>
@@ -189,7 +207,9 @@ export function AppShell() {
               {!isSetupComplete ? (
                 <NavLink
                   to="/app/onboarding/company"
-                  className={(state) => withFixedWidth(setupLinkClassName(state), "lg:min-w-[11rem] lg:justify-center")}
+                  className={(state) =>
+                    withFixedWidth(setupLinkClassName(state), "lg:min-w-[11rem] lg:justify-center")
+                  }
                 >
                   {t("components.appShell.completeSetup")}
                 </NavLink>
@@ -218,20 +238,37 @@ export function AppShell() {
               </div>
             </div>
           </div>
-
         </div>
 
-        <div
-          aria-hidden={!isMobileMenuOpen}
+      </header>
+
+      <div
+        aria-hidden={!isMobileMenuOpen}
+        className={[
+          "fixed inset-0 z-[100] lg:hidden",
+          "transition-all duration-300 ease-out",
+          isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        ].join(" ")}
+      >
+        <button
+          type="button"
+          aria-label="Close mobile menu overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
           className={[
-            "mx-auto w-full max-w-none overflow-hidden px-4 transition-all duration-300 ease-out sm:px-6 lg:hidden",
-            isMobileMenuOpen
-              ? "max-h-[22rem] translate-y-0 pb-4 opacity-100"
-              : "pointer-events-none max-h-0 -translate-y-2 pb-0 opacity-0",
+            "absolute inset-0 bg-slate-950/18 backdrop-blur-[2px] transition-opacity duration-300",
+            isMobileMenuOpen ? "opacity-100" : "opacity-0",
+          ].join(" ")}
+        />
+
+        <div
+          className={[
+            "relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pt-[7.5rem] pb-4 sm:px-6",
+            "transition-all duration-300 ease-out",
+            isMobileMenuOpen ? "translate-y-0 scale-100" : "-translate-y-2 scale-[0.985]",
           ].join(" ")}
         >
-          <div className="app-card flex flex-col gap-2 px-3 py-3">
-            <div className="grid grid-cols-2 gap-3 pb-2">
+          <div className="app-card flex max-h-[calc(100dvh-6.5rem)] min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]">
+            <div className="grid grid-cols-2 gap-3">
               <div className="flex justify-start">
                 <div className="flex w-[8.25rem] justify-center">
                   <LanguageSwitcher compact />
@@ -245,82 +282,84 @@ export function AppShell() {
               </div>
             </div>
 
-            <div className="border-t border-[var(--ip-border)] pt-3">
-              <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
-                {t("components.appShell.workspace")}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
+              <div className="border-t border-[var(--ip-border)] pt-3">
+                <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
+                  {t("components.appShell.workspace")}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  {primaryLinks.map((link) => (
+                    <NavLink
+                      key={link.to}
+                      to={link.to}
+                      end={link.end}
+                      className={({ isActive }) =>
+                        [
+                          "inline-flex min-h-12 w-full items-center justify-start rounded-2xl px-4 py-3 text-sm font-semibold transition",
+                          isActive
+                            ? "bg-slate-950 text-white shadow-[0_16px_30px_rgba(15,23,42,0.14)] dark:bg-white dark:text-slate-950"
+                            : "text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)] hover:text-[var(--ip-primary)]",
+                        ].join(" ")
+                      }
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </NavLink>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                {primaryLinks.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    end={link.end}
-                    className={({ isActive }) =>
-                      [
-                        "inline-flex min-h-12 w-full items-center justify-start rounded-2xl px-4 py-3 text-sm font-semibold transition",
-                        isActive
-                          ? "bg-slate-950 text-white shadow-[0_16px_30px_rgba(15,23,42,0.14)] dark:bg-white dark:text-slate-950"
-                          : "text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)] hover:text-[var(--ip-primary)]",
-                      ].join(" ")
-                    }
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-[var(--ip-border)] pt-3">
-              <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
-                {t("components.appShell.settings")}
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <NavLink
-                  to="/app/settings"
-                  className={utilityLinkClassName}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+              <div className="border-t border-[var(--ip-border)] pt-3">
+                <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
                   {t("components.appShell.settings")}
-                </NavLink>
+                </div>
 
-                {user?.isPlatformAdmin ? (
+                <div className="flex flex-col gap-2">
                   <NavLink
-                    to="/app/admin/companies/new"
+                    to="/app/settings"
                     className={utilityLinkClassName}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {t("components.appShell.registerCompany")}
+                    {t("components.appShell.settings")}
                   </NavLink>
-                ) : null}
 
-                {!isSetupComplete ? (
-                  <NavLink
-                    to="/app/onboarding/company"
-                    className={setupLinkClassName}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  {user?.isPlatformAdmin ? (
+                    <NavLink
+                      to="/app/admin/companies/new"
+                      className={utilityLinkClassName}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {t("components.appShell.registerCompany")}
+                    </NavLink>
+                  ) : null}
+
+                  {!isSetupComplete ? (
+                    <NavLink
+                      to="/app/onboarding/company"
+                      className={setupLinkClassName}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {t("components.appShell.completeSetup")}
+                    </NavLink>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      void logout();
+                    }}
+                    className="app-button-secondary justify-start"
                   >
-                    {t("components.appShell.completeSetup")}
-                  </NavLink>
-                ) : null}
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    void logout();
-                  }}
-                  className="app-button-secondary justify-start"
-                >
-                  {t("components.appShell.logout")}
-                </button>
+                    {t("components.appShell.logout")}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="app-main">
         <Outlet />
