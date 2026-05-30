@@ -275,128 +275,116 @@ export function AppShell() {
         <div aria-hidden="true" className="lg:hidden" style={{ height: mobileHeaderHeight }} />
       ) : null}
 
-      <div
-        aria-hidden={!isMobileMenuOpen}
-        className={[
-          "fixed inset-0 z-[100] lg:hidden",
-          "transition-all duration-300 ease-out",
-          isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
-        ].join(" ")}
-      >
-        <button
-          type="button"
-          aria-label="Close mobile menu overlay"
-          onClick={() => setIsMobileMenuOpen(false)}
-          className={[
-            "absolute inset-0 bg-slate-950/18 backdrop-blur-[2px] transition-opacity duration-300",
-            isMobileMenuOpen ? "opacity-100" : "opacity-0",
-          ].join(" ")}
-        />
+      {isMobileMenuOpen ? (
+        <div aria-hidden={false} className="fixed inset-0 z-[100] lg:hidden">
+          <button
+            type="button"
+            aria-label="Close mobile menu overlay"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute inset-0 bg-slate-950/18 backdrop-blur-[2px]"
+          />
 
-        <div
-          className={[
-            "pointer-events-none relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pb-4 sm:px-6",
-            "transition-all duration-300 ease-out",
-            isMobileMenuOpen ? "translate-y-0 scale-100" : "-translate-y-2 scale-[0.985]",
-          ].join(" ")}
-          style={{ paddingTop: `${mobileHeaderHeight + 12}px` }}
-        >
           <div
-            className="app-card pointer-events-auto flex min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
-            style={{ maxHeight: `calc(100dvh - ${mobileHeaderHeight + 28}px)` }}
+            className="pointer-events-none relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pb-4 sm:px-6"
+            style={{ paddingTop: `${mobileHeaderHeight + 12}px` }}
           >
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex justify-start">
-                <div className="flex w-[8.25rem] justify-center">
-                  <LanguageSwitcher compact />
+            <div
+              className="app-card pointer-events-auto flex min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
+              style={{ maxHeight: `calc(100dvh - ${mobileHeaderHeight + 28}px)` }}
+            >
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex justify-start">
+                  <div className="flex w-[8.25rem] justify-center">
+                    <LanguageSwitcher compact />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <div className="flex w-[8.25rem] justify-center">
+                    <ThemeSwitcher compact showLabelWhenCompact />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <div className="flex w-[8.25rem] justify-center">
-                  <ThemeSwitcher compact showLabelWhenCompact />
-                </div>
-              </div>
-            </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1 touch-pan-y">
+                <div className="border-t border-[var(--ip-border)] pt-3">
+                  <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
+                    {t("components.appShell.workspace")}
+                  </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1 touch-pan-y">
-              <div className="border-t border-[var(--ip-border)] pt-3">
-                <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
-                  {t("components.appShell.workspace")}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  {primaryLinks.map((link) => (
-                    <NavLink
-                      key={link.to}
-                      to={link.to}
-                      end={link.end}
-                      className={({ isActive }) =>
-                        [
-                          "inline-flex min-h-12 w-full items-center justify-start rounded-2xl px-4 py-3 text-sm font-semibold transition",
-                          isActive
-                            ? "bg-slate-950 text-white shadow-[0_16px_30px_rgba(15,23,42,0.14)] dark:bg-white dark:text-slate-950"
-                            : "text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)] hover:text-[var(--ip-primary)]",
-                        ].join(" ")
-                      }
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </NavLink>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-[var(--ip-border)] pt-3">
-                <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
-                  {t("components.appShell.settings")}
+                  <div className="flex flex-col gap-2">
+                    {primaryLinks.map((link) => (
+                      <NavLink
+                        key={link.to}
+                        to={link.to}
+                        end={link.end}
+                        className={({ isActive }) =>
+                          [
+                            "inline-flex min-h-12 w-full items-center justify-start rounded-2xl px-4 py-3 text-sm font-semibold transition",
+                            isActive
+                              ? "bg-slate-950 text-white shadow-[0_16px_30px_rgba(15,23,42,0.14)] dark:bg-white dark:text-slate-950"
+                              : "text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)] hover:text-[var(--ip-primary)]",
+                          ].join(" ")
+                        }
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </NavLink>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <NavLink
-                    to="/app/settings"
-                    className={utilityLinkClassName}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
+                <div className="border-t border-[var(--ip-border)] pt-3">
+                  <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
                     {t("components.appShell.settings")}
-                  </NavLink>
+                  </div>
 
-                  {user?.isPlatformAdmin ? (
+                  <div className="flex flex-col gap-2">
                     <NavLink
-                      to="/app/admin/companies/new"
+                      to="/app/settings"
                       className={utilityLinkClassName}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {t("components.appShell.registerCompany")}
+                      {t("components.appShell.settings")}
                     </NavLink>
-                  ) : null}
 
-                  {!isSetupComplete ? (
-                    <NavLink
-                      to="/app/onboarding/company"
-                      className={setupLinkClassName}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                    {user?.isPlatformAdmin ? (
+                      <NavLink
+                        to="/app/admin/companies/new"
+                        className={utilityLinkClassName}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {t("components.appShell.registerCompany")}
+                      </NavLink>
+                    ) : null}
+
+                    {!isSetupComplete ? (
+                      <NavLink
+                        to="/app/onboarding/company"
+                        className={setupLinkClassName}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {t("components.appShell.completeSetup")}
+                      </NavLink>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        void logout();
+                      }}
+                      className="app-button-secondary justify-start"
                     >
-                      {t("components.appShell.completeSetup")}
-                    </NavLink>
-                  ) : null}
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      void logout();
-                    }}
-                    className="app-button-secondary justify-start"
-                  >
-                    {t("components.appShell.logout")}
-                  </button>
+                      {t("components.appShell.logout")}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <main className="app-main">
         <Outlet />
