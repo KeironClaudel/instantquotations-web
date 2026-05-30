@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/providers/useAuth";
@@ -55,7 +55,22 @@ export function AppShell() {
   const { companySettings, logout, user } = useAuth();
   const isSetupComplete = isCompanySetupComplete(companySettings);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileHeaderHeight, setMobileHeaderHeight] = useState(0);
+  const headerRef = useRef<HTMLElement | null>(null);
   const userInitials = getUserInitials(user?.fullName);
+
+  useEffect(() => {
+    const updateMobileHeaderHeight = () => {
+      setMobileHeaderHeight(headerRef.current?.offsetHeight ?? 0);
+    };
+
+    updateMobileHeaderHeight();
+    window.addEventListener("resize", updateMobileHeaderHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateMobileHeaderHeight);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMobileMenuOpen) {
@@ -72,6 +87,14 @@ export function AppShell() {
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
     };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    setMobileHeaderHeight(headerRef.current?.offsetHeight ?? 0);
   }, [isMobileMenuOpen]);
 
   const primaryLinks = [
@@ -101,7 +124,13 @@ export function AppShell() {
 
   return (
     <div className="app-shell">
-      <header className="app-topbar sticky top-0 z-[110]">
+      <header
+        ref={headerRef}
+        className={[
+          "app-topbar top-0 z-[110]",
+          isMobileMenuOpen ? "fixed inset-x-0" : "sticky",
+        ].join(" ")}
+      >
         <div className="mx-auto flex w-full max-w-none flex-col gap-3 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8 lg:py-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="app-card flex min-w-0 items-center gap-3 px-3 py-3 sm:px-5 lg:w-auto lg:min-w-[18rem] lg:max-w-[24rem] lg:flex-none">
@@ -242,6 +271,10 @@ export function AppShell() {
 
       </header>
 
+      {isMobileMenuOpen ? (
+        <div aria-hidden="true" className="lg:hidden" style={{ height: mobileHeaderHeight }} />
+      ) : null}
+
       <div
         aria-hidden={!isMobileMenuOpen}
         className={[
@@ -262,12 +295,16 @@ export function AppShell() {
 
         <div
           className={[
-            "relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pt-[7.5rem] pb-4 sm:px-6",
+            "relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pb-4 sm:px-6",
             "transition-all duration-300 ease-out",
             isMobileMenuOpen ? "translate-y-0 scale-100" : "-translate-y-2 scale-[0.985]",
           ].join(" ")}
+          style={{ paddingTop: `${mobileHeaderHeight + 12}px` }}
         >
-          <div className="app-card flex max-h-[calc(100dvh-6.5rem)] min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]">
+          <div
+            className="app-card flex min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
+            style={{ maxHeight: `calc(100dvh - ${mobileHeaderHeight + 28}px)` }}
+          >
             <div className="grid grid-cols-2 gap-3">
               <div className="flex justify-start">
                 <div className="flex w-[8.25rem] justify-center">
@@ -282,7 +319,7 @@ export function AppShell() {
               </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1 touch-pan-y">
               <div className="border-t border-[var(--ip-border)] pt-3">
                 <div className="mb-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--ip-text-soft)]">
                   {t("components.appShell.workspace")}
