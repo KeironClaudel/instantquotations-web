@@ -155,12 +155,12 @@ export function useSettingsPage() {
       return;
     }
 
-    if (!form.clearResendApiKey && !activeCompanySettings?.hasResendApiKeyConfigured && !form.resendApiKey.trim()) {
-      setFeedback(createErrorFeedback(t("pages.settings.feedback.resendApiKeyRequired")));
-      return;
-    }
+    const hasExistingResendApiKey = activeCompanySettings?.hasResendApiKeyConfigured ?? false;
+    const isProvidingNewResendApiKey = form.resendApiKey.trim().length > 0;
+    const willHaveConfiguredResendApiKey =
+      !form.clearResendApiKey && (hasExistingResendApiKey || isProvidingNewResendApiKey);
 
-    if (!form.clearResendApiKey && !form.resendSenderEmail.trim()) {
+    if (willHaveConfiguredResendApiKey && !form.resendSenderEmail.trim()) {
       setFeedback(createErrorFeedback(t("pages.settings.feedback.resendSenderEmailRequired")));
       return;
     }
