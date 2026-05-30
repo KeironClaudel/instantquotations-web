@@ -295,14 +295,14 @@ export function AppShell() {
 
         <div
           className={[
-            "relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pb-4 sm:px-6",
+            "pointer-events-none relative z-10 mx-auto flex h-full w-full max-w-none flex-col px-4 pb-4 sm:px-6",
             "transition-all duration-300 ease-out",
             isMobileMenuOpen ? "translate-y-0 scale-100" : "-translate-y-2 scale-[0.985]",
           ].join(" ")}
           style={{ paddingTop: `${mobileHeaderHeight + 12}px` }}
         >
           <div
-            className="app-card flex min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
+            className="app-card pointer-events-auto flex min-h-0 flex-col gap-3 overflow-hidden bg-[var(--ip-surface-strong)] px-3 py-3 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
             style={{ maxHeight: `calc(100dvh - ${mobileHeaderHeight + 28}px)` }}
           >
             <div className="grid grid-cols-2 gap-3">
