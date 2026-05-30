@@ -24,6 +24,7 @@ export function PwaManager() {
   const [queuedCount, setQueuedCount] = useState(0);
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
   const [isInstalling, setIsInstalling] = useState(false);
+  const [isUpdatingApp, setIsUpdatingApp] = useState(false);
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     offlineReady: [offlineReady, setOfflineReady],
@@ -81,6 +82,20 @@ export function PwaManager() {
     } finally {
       setDeferredInstallPrompt(null);
       setIsInstalling(false);
+    }
+  }
+
+  async function handleAppUpdate() {
+    try {
+      setIsUpdatingApp(true);
+      await updateServiceWorker(true);
+      setNeedRefresh(false);
+
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 250);
+    } catch {
+      setIsUpdatingApp(false);
     }
   }
 
@@ -180,14 +195,18 @@ export function PwaManager() {
               <div className="mt-3 flex gap-2">
                 <button
                   type="button"
-                  onClick={() => void updateServiceWorker(true)}
+                  onClick={() => void handleAppUpdate()}
+                  disabled={isUpdatingApp}
                   className="rounded-2xl bg-sky-600 px-3 py-2 font-medium text-white transition hover:bg-sky-700"
                 >
-                  {t("components.pwaManager.update.button")}
+                  {isUpdatingApp
+                    ? t("components.pwaManager.update.updating")
+                    : t("components.pwaManager.update.button")}
                 </button>
                 <button
                   type="button"
                   onClick={() => setNeedRefresh(false)}
+                  disabled={isUpdatingApp}
                   className="rounded-2xl border border-sky-200 bg-white px-3 py-2 font-medium text-sky-800 transition hover:bg-sky-100"
                 >
                   {t("common.actions.later")}
