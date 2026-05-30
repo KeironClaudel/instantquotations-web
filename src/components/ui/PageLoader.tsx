@@ -5,9 +5,11 @@ export function PageLoader({ message = "Loading..." }: { message?: string }) {
 
   return (
     <div className="flex min-h-[40vh] items-center justify-center px-4">
-      <div className="flex flex-col items-center gap-3 text-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-800 dark:border-slate-800 dark:border-t-slate-200" />
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+      <div className="app-card flex min-w-[220px] flex-col items-center gap-3 px-6 py-7 text-center">
+        <div className="relative flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-[var(--ip-primary-soft)]">
+          <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-white/35 border-t-[var(--ip-primary)] dark:border-slate-900/20 dark:border-t-white" />
+        </div>
+        <p className="text-sm font-medium text-[var(--ip-text-soft)]">
           {message === "Loading..." ? t("components.pageLoader.loading") : message}
         </p>
       </div>

@@ -13,18 +13,29 @@ function QuickAction({
   description: string;
   variant?: "default" | "highlight";
 }) {
+  const { t } = useTranslation();
   const className =
     variant === "highlight"
-      ? "rounded-3xl border border-slate-300 bg-slate-100 p-5 text-slate-900 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-      : "rounded-3xl border border-slate-200 bg-white p-5 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/80";
+      ? "app-card flex min-h-[184px] flex-col justify-between p-5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(23,59,122,0.18)] sm:p-6"
+      : "app-card-soft flex min-h-[184px] flex-col justify-between p-5 transition hover:-translate-y-0.5 hover:bg-white/80 sm:p-6";
 
   return (
     <Link to={to} className={className}>
-      <div className={`text-base font-semibold ${variant === "highlight" ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100"}`}>
-        {title}
+      <div>
+        <div className="app-kicker">
+          {variant === "highlight" ? "PWA" : t("components.appShell.workspace")}
+        </div>
+        <div className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-[var(--ip-text)]">
+          {title}
+        </div>
+        <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
+          {description}
+        </div>
       </div>
-      <div className={`mt-2 text-sm leading-6 ${variant === "highlight" ? "text-slate-700 dark:text-slate-300" : "text-slate-600 dark:text-slate-400"}`}>
-        {description}
+
+      <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--ip-primary)]">
+        <span>{title}</span>
+        <span aria-hidden="true">→</span>
       </div>
     </Link>
   );
@@ -36,44 +47,94 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-7">
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-          {t("pages.dashboard.badge")}
-        </div>
+      <section className="app-card-hero p-6 sm:p-7">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.9fr)] xl:items-start">
+          <div>
+            <div className="app-page-badge">{t("pages.dashboard.badge")}</div>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-          {t("pages.dashboard.welcome", { name: userFirstName })}
-        </h1>
+            <h1 className="app-page-title mt-4">
+              {t("pages.dashboard.welcome", { name: userFirstName })}
+            </h1>
 
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-400">
-          {t("pages.dashboard.description")}
-        </p>
+            <p className="app-page-copy">{t("pages.dashboard.description")}</p>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
-          <span className="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-            {companyName}
-          </span>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/app/proforms/new" className="app-button-primary">
+                {t("pages.dashboard.createNewProform")}
+              </Link>
+              <Link to="/app/proforms" className="app-button-secondary">
+                {t("pages.dashboard.showPreviousProforms")}
+              </Link>
+            </div>
 
-          <span
-            className={`rounded-full px-3 py-1 font-medium ${
-              isSetupComplete
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-amber-100 text-amber-800"
-            }`}
-          >
-            {isSetupComplete
-              ? t("components.appShell.setupComplete")
-              : t("components.appShell.setupNeedsAttention")}
-          </span>
+            <div className="mt-7 grid gap-3 md:grid-cols-3">
+              <div className="app-stat">
+                <div className="app-stat-label">{t("components.appShell.workspace")}</div>
+                <div className="app-stat-value break-words text-[1.08rem]">{companyName}</div>
+              </div>
+
+              <div className="app-stat">
+                <div className="app-stat-label">{t("common.labels.status")}</div>
+                <div className="mt-3">
+                  <span className={isSetupComplete ? "app-chip app-chip-success" : "app-chip app-chip-warning"}>
+                    {isSetupComplete
+                      ? t("components.appShell.setupComplete")
+                      : t("components.appShell.setupNeedsAttention")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="app-stat bg-[linear-gradient(135deg,var(--ip-primary-soft),transparent)]">
+                <div className="app-stat-label">PWA</div>
+                <div className="app-stat-value text-[1.08rem]">
+                  {t("pages.dashboard.quickActions")}
+                </div>
+                <div className="mt-2 text-sm leading-6 text-[var(--ip-text-soft)]">
+                  {t("pages.dashboard.quickActionsDescription")}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-[var(--ip-text-soft)]">
+              <span className="app-chip">{companyName}</span>
+              <span className="app-chip">{t("pages.dashboard.quickActions")}</span>
+            </div>
+          </div>
+
+          <div className="app-card-inset p-5 sm:p-6">
+            <div className="app-kicker">{t("components.appShell.workspace")}</div>
+            <div className="mt-3 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
+              {companyName}
+            </div>
+            <p className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
+              {t("pages.dashboard.quickActionsDescription")}
+            </p>
+
+            <div className="mt-5 space-y-3">
+              <div className="app-card-soft p-4">
+                <div className="app-kicker">{t("pages.dashboard.createNewProform")}</div>
+                <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
+                  {t("pages.dashboard.createNewProformDescription")}
+                </div>
+              </div>
+
+              <div className="app-card-soft p-4">
+                <div className="app-kicker">{t("pages.dashboard.showPreviousProforms")}</div>
+                <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
+                  {t("pages.dashboard.showPreviousProformsDescription")}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+      <section className="app-card p-6 sm:p-7">
         <div className="mb-5">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <h2 className="app-section-heading">
             {t("pages.dashboard.quickActions")}
           </h2>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          <p className="app-section-copy">
             {t("pages.dashboard.quickActionsDescription")}
           </p>
         </div>

@@ -15,14 +15,14 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
     useRegisterPage({ mode });
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+    "app-input";
 
   const textareaClassName =
-    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+    "app-textarea min-h-32";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="mb-8 text-center">
+      <div className="app-page-head text-center">
         {!isAdminMode ? (
           <div className="mb-4 flex justify-end gap-2">
             <ThemeSwitcher compact />
@@ -30,23 +30,23 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
           </div>
         ) : null}
 
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+        <div className="app-page-badge">
           {isAdminMode ? t("pages.adminCompanyRegistration.badge") : t("pages.register.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <h1 className="app-page-title mt-3">
           {isAdminMode ? t("pages.adminCompanyRegistration.title") : t("pages.register.title")}
         </h1>
 
-        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+        <p className="app-page-copy mx-auto">
           {isAdminMode ? t("pages.adminCompanyRegistration.description") : t("pages.register.description")}
         </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.85fr]">
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("common.labels.companyInformation")}
             </h2>
 
@@ -129,8 +129,8 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.register.ownerAccount")}
             </h2>
 
@@ -180,8 +180,8 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.register.brandingAndTax")}
             </h2>
 
@@ -190,7 +190,7 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.primaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.primaryColor}
                   onChange={(event) => updateField("primaryColor", event.target.value)}
                 />
@@ -200,7 +200,7 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.secondaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.secondaryColor}
                   onChange={(event) => updateField("secondaryColor", event.target.value)}
                 />
@@ -210,7 +210,7 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.accentColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.accentColor}
                   onChange={(event) => updateField("accentColor", event.target.value)}
                 />
@@ -273,8 +273,8 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("common.labels.termsAndConditions")}
             </h2>
 
@@ -285,42 +285,42 @@ export function RegisterPage({ mode = "public" }: RegisterPageProps) {
             />
           </section>
 
-          {feedback ? (
-            <div
-              className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
-                feedback.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700"
-              }`}
-            >
-              {feedback.message}
+        {feedback ? (
+          <div
+            className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
+              feedback.type === "success"
+                  ? "app-feedback-success"
+                  : "app-feedback-error"
+            }`}
+          >
+            {feedback.message}
             </div>
           ) : null}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary w-full"
           >
             {isSubmitting ? t("pages.register.creatingWorkspace") : t("pages.register.createWorkspace")}
           </button>
 
           {!isAdminMode ? (
-            <div className="text-center text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-center text-sm text-[var(--ip-text-soft)]">
               {t("pages.register.alreadyHaveAccount")}{" "}
-              <Link to="/login" className="font-medium text-slate-900 underline dark:text-slate-100">
+              <Link to="/login" className="font-semibold text-[var(--ip-primary)] underline">
                 {t("pages.register.signIn")}
               </Link>
             </div>
           ) : null}
         </form>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <section className="app-card p-5 sm:p-6">
+          <h2 className="app-section-heading">
             {t("pages.register.livePreview")}
           </h2>
 
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          <p className="app-section-copy">
             {t("pages.register.livePreviewDescription")}
           </p>
 

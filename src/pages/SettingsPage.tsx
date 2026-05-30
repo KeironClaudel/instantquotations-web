@@ -19,10 +19,10 @@ export function SettingsPage() {
   } = useSettingsPage();
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+    "app-input";
 
   const textareaClassName =
-    "min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+    "app-textarea min-h-32";
 
   const emailDeliveryStatusClassName = {
     ready:
@@ -42,24 +42,24 @@ export function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-1 sm:px-0">
-      <div className="mb-8">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+      <div className="app-page-head">
+        <div className="app-page-badge">
           {t("pages.settings.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <h1 className="app-page-title mt-3">
           {t("pages.settings.title")}
         </h1>
 
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+        <p className="app-page-copy max-w-2xl">
           {t("pages.settings.description")}
         </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("common.labels.companyInformation")}
             </h2>
 
@@ -131,9 +131,9 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+          <section className="app-card p-5 sm:p-6">
             <div className="mb-5 flex flex-wrap items-center gap-3">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              <h2 className="app-section-heading">
                 {t("pages.settings.emailDelivery")}
               </h2>
 
@@ -215,8 +215,8 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.settings.brandingRules")}
             </h2>
 
@@ -225,7 +225,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.primaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.primaryColor}
                   onChange={(event) => updateField("primaryColor", event.target.value)}
                 />
@@ -235,7 +235,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.secondaryColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.secondaryColor}
                   onChange={(event) => updateField("secondaryColor", event.target.value)}
                 />
@@ -245,7 +245,7 @@ export function SettingsPage() {
                 <label className="mb-1 block text-sm font-medium">{t("pages.settings.accentColor")}</label>
                 <input
                   type="color"
-                  className="h-12 w-full rounded-2xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950"
+                  className="app-swatch"
                   value={form.accentColor}
                   onChange={(event) => updateField("accentColor", event.target.value)}
                 />
@@ -285,13 +285,7 @@ export function SettingsPage() {
           </section>
 
           {feedback ? (
-            <div
-              className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
-                feedback.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700"
-              }`}
-            >
+            <div className={feedback.type === "success" ? "app-feedback-success" : "app-feedback-error"}>
               {feedback.message}
             </div>
           ) : null}
@@ -299,15 +293,15 @@ export function SettingsPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary w-full"
           >
             {isSaving ? t("pages.settings.savingChanges") : t("pages.settings.saveSettings")}
           </button>
         </form>
 
         <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.settings.logo")}
             </h2>
 
@@ -326,7 +320,7 @@ export function SettingsPage() {
                 </div>
               )}
 
-              <label className="w-full cursor-pointer rounded-2xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900">
+              <label className="app-button-secondary w-full cursor-pointer text-center">
                 {isUploadingLogo ? t("pages.settings.uploading") : t("pages.settings.replaceLogo")}
                 <input
                   type="file"
@@ -339,8 +333,8 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.settings.livePreview")}
             </h2>
 

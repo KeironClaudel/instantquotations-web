@@ -3,6 +3,7 @@ import { useTheme } from "@/app/providers/useTheme";
 
 type ThemeSwitcherProps = {
   compact?: boolean;
+  showLabelWhenCompact?: boolean;
 };
 
 function SunIcon() {
@@ -26,19 +27,22 @@ function MoonIcon() {
   );
 }
 
-export function ThemeSwitcher({ compact = false }: ThemeSwitcherProps) {
+export function ThemeSwitcher({
+  compact = false,
+  showLabelWhenCompact = false,
+}: ThemeSwitcherProps) {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
+  const shouldShowLabel = !compact || showLabelWhenCompact;
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
       className={[
-        "inline-flex shrink-0 items-center gap-2 rounded-xl border p-1 transition",
-        "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50",
-        "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800",
+        "inline-flex shrink-0 items-center gap-2 rounded-2xl border p-1 transition-all duration-300 ease-out backdrop-blur",
+        "border-[var(--ip-border)] bg-[var(--ip-surface-strong)] text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)]",
         compact ? "justify-center px-2.5 py-1.5" : "px-3 py-2",
       ].join(" ")}
       title={isDark ? t("components.themeSwitcher.switchToLight") : t("components.themeSwitcher.switchToDark")}
@@ -46,17 +50,29 @@ export function ThemeSwitcher({ compact = false }: ThemeSwitcherProps) {
     >
       <span
         className={[
-          "inline-flex h-8 w-8 items-center justify-center rounded-lg transition",
+          "inline-flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-300 ease-out",
           isDark
-            ? "bg-slate-800 text-slate-100 ring-1 ring-slate-700"
-            : "bg-slate-100 text-slate-900 ring-1 ring-slate-300 dark:bg-slate-800 dark:text-slate-100",
+            ? "bg-white text-slate-950 shadow-sm"
+            : "bg-slate-950 text-white shadow-sm dark:bg-white dark:text-slate-950",
         ].join(" ")}
       >
-        {isDark ? <MoonIcon /> : <SunIcon />}
+        <span
+          className={[
+            "inline-flex transition-all duration-300 ease-out",
+            isDark ? "translate-x-0 rotate-0 scale-100 opacity-100" : "translate-x-0 rotate-180 scale-95 opacity-100",
+          ].join(" ")}
+        >
+          {isDark ? <MoonIcon /> : <SunIcon />}
+        </span>
       </span>
 
-      {!compact ? (
-        <span className="text-sm font-medium">
+      {shouldShowLabel ? (
+        <span
+          className={[
+            "text-sm font-medium transition-all duration-300 ease-out",
+            isDark ? "translate-x-0 opacity-100" : "translate-x-0 opacity-100",
+          ].join(" ")}
+        >
           {isDark ? t("components.themeSwitcher.dark") : t("components.themeSwitcher.light")}
         </span>
       ) : null}

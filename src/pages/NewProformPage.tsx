@@ -9,13 +9,13 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { useNewProformPage } from "@/hooks/pages/proforms/useNewProformPage";
 
 const inputClassName =
-  "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+  "app-input";
 
 const textareaClassName =
-  "min-h-28 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+  "app-textarea min-h-28";
 
 const sectionTextareaClassName =
-  "min-h-40 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+  "app-textarea min-h-40";
 
 export function NewProformPage() {
   const { i18n, t } = useTranslation();
@@ -90,8 +90,8 @@ export function NewProformPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-1 sm:px-0">
-      <div className="mb-8">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+      <div className="app-page-head">
+        <div className="app-page-badge">
           {t("pages.newProform.badge")}
         </div>
 
@@ -104,20 +104,20 @@ export function NewProformPage() {
       </div>
 
       <form className="space-y-6 sm:space-y-7" onSubmit={handleSubmit}>
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+        <section className="app-card p-5 sm:p-6">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              <h2 className="app-section-heading">
                 {t("pages.newProform.clientInformation")}
               </h2>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              <p className="app-section-copy">
                 {t("pages.newProform.clientInformationDescription")}
               </p>
             </div>
 
             <Link
               to="/app/clients"
-              className="inline-flex rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+              className="app-button-secondary"
             >
               {t("pages.newProform.manageClients")}
             </Link>
@@ -125,7 +125,7 @@ export function NewProformPage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.clientName")}</label>
+              <label className="app-label">{t("pages.newProform.clientName")}</label>
               <div className="relative">
                 <input
                   className={inputClassName}
@@ -142,13 +142,13 @@ export function NewProformPage() {
                 />
 
                 {showClientSuggestions ? (
-                  <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-950">
+                  <div className="app-card absolute z-20 mt-2 w-full overflow-hidden p-1">
                     {filteredClients.map((client) => (
                       <button
                         key={client.id}
                         type="button"
                         onClick={() => applyClientSnapshot(client)}
-                        className="flex w-full items-start justify-between gap-3 border-b border-slate-100 px-4 py-3 text-left transition last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800"
+                        className="flex w-full items-start justify-between gap-3 rounded-2xl px-4 py-3 text-left transition hover:bg-[var(--ip-primary-soft)]"
                       >
                         <div>
                           <div className="font-medium text-slate-900 dark:text-slate-100">{client.name}</div>
@@ -171,12 +171,12 @@ export function NewProformPage() {
               </div>
 
               {selectedClient ? (
-                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-[var(--ip-primary-soft)] px-3 py-1 text-xs font-semibold text-[var(--ip-primary)]">
                   <span>{t("pages.newProform.clientLinked")}</span>
                   <button
                     type="button"
                     onClick={clearSelectedClient}
-                    className="text-slate-500 transition hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
+                    className="transition hover:opacity-80"
                   >
                     {t("common.actions.dismiss")}
                   </button>
@@ -185,7 +185,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.clientEmail")}</label>
+              <label className="app-label">{t("pages.newProform.clientEmail")}</label>
               <input
                 type="email"
                 className={inputClassName}
@@ -198,7 +198,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.clientPhone")}</label>
+              <label className="app-label">{t("pages.newProform.clientPhone")}</label>
               <input
                 className={inputClassName}
                 value={clientPhone}
@@ -210,7 +210,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.identificationType")}</label>
+              <label className="app-label">{t("pages.newProform.identificationType")}</label>
               <select
                 className={inputClassName}
                 value={clientIdentificationType}
@@ -229,7 +229,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.identificationNumber")}</label>
+              <label className="app-label">{t("pages.newProform.identificationNumber")}</label>
               <input
                 className={inputClassName}
                 value={clientIdentificationNumber}
@@ -242,7 +242,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.currency")}</label>
+              <label className="app-label">{t("pages.newProform.currency")}</label>
               <select
                 className={inputClassName}
                 value={currency}
@@ -254,7 +254,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.location")}</label>
+              <label className="app-label">{t("pages.newProform.location")}</label>
               <input
                 className={inputClassName}
                 value={location}
@@ -268,19 +268,19 @@ export function NewProformPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+        <section className="app-card p-5 sm:p-6">
           <div className="mb-5">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            <h2 className="app-section-heading">
               {t("pages.newProform.documentSections")}
             </h2>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            <p className="app-section-copy">
               {t("pages.newProform.documentSectionsDescription")}
             </p>
           </div>
 
           <div className="grid gap-5">
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.serviceDescription")}</label>
+              <label className="app-label">{t("pages.newProform.serviceDescription")}</label>
               <textarea
                 className={sectionTextareaClassName}
                 value={serviceDescription}
@@ -294,7 +294,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.scopeOfWork")}</label>
+              <label className="app-label">{t("pages.newProform.scopeOfWork")}</label>
               <textarea
                 className={sectionTextareaClassName}
                 value={scopeOfWork}
@@ -308,7 +308,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.serviceConditions")}</label>
+              <label className="app-label">{t("pages.newProform.serviceConditions")}</label>
               <textarea
                 className={sectionTextareaClassName}
                 value={serviceConditions}
@@ -322,7 +322,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.paymentConditions")}</label>
+              <label className="app-label">{t("pages.newProform.paymentConditions")}</label>
               <textarea
                 className={sectionTextareaClassName}
                 value={paymentConditions}
@@ -336,7 +336,7 @@ export function NewProformPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.newProform.internalNotes")}</label>
+              <label className="app-label">{t("pages.newProform.internalNotes")}</label>
               <textarea
                 className={textareaClassName}
                 value={internalNotes}
@@ -346,21 +346,21 @@ export function NewProformPage() {
                 spellCheck
                 lang="es"
               />
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              <p className="app-helper">
                 {t("pages.newProform.internalNotesHelper")}
               </p>
             </div>
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+        <section className="app-card p-5 sm:p-6">
           <div className="mb-5 flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{t("pages.newProform.items")}</h2>
+            <h2 className="app-section-heading">{t("pages.newProform.items")}</h2>
 
             <button
               type="button"
               onClick={addItem}
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+              className="app-button-secondary"
             >
               {t("pages.newProform.addItem")}
             </button>
@@ -370,17 +370,17 @@ export function NewProformPage() {
             {items.map((item, index) => (
               <div
                 key={item.id}
-                className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-950 sm:p-5"
+                className="app-card-inset p-4 sm:p-5"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                  <div className="text-sm font-bold text-[var(--ip-text)]">
                     {t("pages.newProform.itemNumber", { index: index + 1 })}
                   </div>
 
                   <button
                     type="button"
                     onClick={() => removeItem(item.id)}
-                    className="text-sm font-medium text-red-600 transition hover:text-red-700"
+                    className="text-sm font-semibold text-rose-700 transition hover:opacity-80"
                   >
                     {t("pages.newProform.remove")}
                   </button>
@@ -388,7 +388,7 @@ export function NewProformPage() {
 
                 <div className="grid gap-4 lg:grid-cols-12">
                   <div className="lg:col-span-6">
-                    <label className="mb-1 block text-sm font-medium">{t("common.labels.description")}</label>
+                    <label className="app-label">{t("common.labels.description")}</label>
                     <input
                       className={inputClassName}
                       value={item.description}
@@ -401,7 +401,7 @@ export function NewProformPage() {
                   </div>
 
                   <div className="lg:col-span-2">
-                    <label className="mb-1 block text-sm font-medium">{t("common.labels.quantity")}</label>
+                    <label className="app-label">{t("common.labels.quantity")}</label>
                     <input
                       type="number"
                       min="0"
@@ -413,7 +413,7 @@ export function NewProformPage() {
                   </div>
 
                   <div className="lg:col-span-2">
-                    <label className="mb-1 block text-sm font-medium">{t("common.finance.unitPrice")}</label>
+                    <label className="app-label">{t("common.finance.unitPrice")}</label>
                     <input
                       inputMode="decimal"
                       type="text"
@@ -424,8 +424,8 @@ export function NewProformPage() {
                   </div>
 
                   <div className="lg:col-span-2">
-                    <label className="mb-1 block text-sm font-medium">{t("pages.newProform.lineTotal")}</label>
-                    <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                    <label className="app-label">{t("pages.newProform.lineTotal")}</label>
+                    <div className="app-input flex items-center font-semibold text-[var(--ip-text-soft)]">
                       {currencySymbol}
                       {formatMoneyAmount(calculateLineTotal(item.quantity, item.unitPrice))}
                     </div>
@@ -436,12 +436,12 @@ export function NewProformPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-          <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <section className="app-card p-5 sm:p-6">
+          <h2 className="mb-5 app-section-heading">
             {t("pages.newProform.summary")}
           </h2>
 
-          <div className="space-y-3 rounded-2xl bg-slate-50 p-4 text-sm dark:bg-slate-950">
+          <div className="app-card-inset space-y-3 p-4 text-sm">
             <div className="flex items-center justify-between">
               <span>{t("common.finance.subtotal")}</span>
               <span>
@@ -460,7 +460,7 @@ export function NewProformPage() {
               </span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-300 pt-4 text-lg font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">
+            <div className="flex items-center justify-between border-t border-[var(--ip-border)] pt-4 text-lg font-extrabold text-[var(--ip-text)]">
               <span>{t("common.finance.total")}</span>
               <span>
                 {currencySymbol}
@@ -474,8 +474,8 @@ export function NewProformPage() {
           <div
             className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
               feedback.type === "success"
-                ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border border-red-200 bg-red-50 text-red-700"
+                ? "app-feedback-success"
+                : "app-feedback-error"
             }`}
           >
             {feedback.message}
@@ -486,21 +486,21 @@ export function NewProformPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary w-full"
           >
             {isSubmitting ? t("pages.newProform.creatingProform") : t("pages.newProform.createProform")}
           </button>
 
           <Link
             to="/app/proforms"
-            className="flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="app-button-secondary"
           >
             {t("pages.newProform.viewProforms")}
           </Link>
         </div>
 
         {queuedNotice ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800 shadow-sm">
+          <div className="app-feedback-warning">
             {t("pages.newProform.queuedNotice", {
               clientName: queuedNotice.clientName,
               queueId: queuedNotice.queueId,
@@ -516,8 +516,8 @@ export function NewProformPage() {
         ) : null}
 
         {createdProform ? (
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <div className="mb-5 rounded-3xl border border-emerald-200 bg-emerald-50 p-4">
+          <section className="app-card p-5 sm:p-6">
+            <div className="mb-5 rounded-[1.8rem] border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/25 dark:bg-emerald-950/30">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <div className="text-sm font-medium uppercase tracking-wide text-emerald-700">
@@ -584,10 +584,10 @@ export function NewProformPage() {
             </div>
 
             <div className="mb-4">
-              <h3 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              <h3 className="app-section-heading">
                 {t("pages.newProform.proformActions")}
               </h3>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              <p className="app-section-copy">
                 {t("pages.newProform.proformActionsDescription")}
               </p>
             </div>
@@ -597,7 +597,7 @@ export function NewProformPage() {
                 type="button"
                 onClick={() => void handleDownloadPdf()}
                 disabled={isDownloading}
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                className="app-button-secondary"
               >
                 {isDownloading ? t("pages.newProform.downloading") : t("pages.newProform.downloadPdf")}
               </button>
@@ -606,7 +606,7 @@ export function NewProformPage() {
                 type="button"
                 onClick={() => void handleCreateShareLink()}
                 disabled={isCreatingShareLink}
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                className="app-button-secondary"
               >
                 {isCreatingShareLink ? t("pages.newProform.creatingLink") : t("pages.newProform.createShareLink")}
               </button>
@@ -615,7 +615,7 @@ export function NewProformPage() {
                 type="button"
                 onClick={() => void handleNativeShare()}
                 disabled={isSharing}
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                className="app-button-secondary"
               >
                 {isSharing ? t("pages.newProform.sharing") : t("pages.newProform.share")}
               </button>
@@ -623,7 +623,7 @@ export function NewProformPage() {
               <button
                 type="button"
                 onClick={resetCreatedProform}
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                className="app-button-ghost"
               >
                 {t("pages.newProform.createAnother")}
               </button>
@@ -631,7 +631,7 @@ export function NewProformPage() {
             </div>
 
             {shareUrlValue ? (
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950">
+              <div className="app-card-inset mt-4 p-4">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <div className="text-sm font-medium">{t("pages.newProform.shareUrl")}</div>
 
@@ -639,22 +639,22 @@ export function NewProformPage() {
                     type="button"
                     onClick={() => void handleCopyShareLink()}
                     disabled={isCopyingShareLink}
-                    className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                    className="app-button-secondary min-h-0 px-3 py-2 text-xs"
                   >
                     {isCopyingShareLink ? t("pages.newProform.copying") : t("common.actions.copyLink")}
                   </button>
                 </div>
 
-                <div className="break-all text-sm text-slate-700 dark:text-slate-300">{shareUrlValue}</div>
+                <div className="break-all text-sm text-[var(--ip-text-soft)]">{shareUrlValue}</div>
               </div>
             ) : null}
 
-            <div className="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
-              <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pages.newProform.sendByEmail")}</h3>
+            <div className="mt-6 border-t border-[var(--ip-border)] pt-5">
+              <h3 className="mb-4 app-section-heading">{t("pages.newProform.sendByEmail")}</h3>
 
               <div className="grid gap-4">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">{t("common.labels.recipientEmail")}</label>
+                  <label className="app-label">{t("common.labels.recipientEmail")}</label>
                   <input
                     type="email"
                     className={inputClassName}
@@ -664,7 +664,7 @@ export function NewProformPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium">{t("common.labels.subject")}</label>
+                  <label className="app-label">{t("common.labels.subject")}</label>
                   <input
                     className={inputClassName}
                     value={emailSubject}
@@ -673,7 +673,7 @@ export function NewProformPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium">{t("pages.newProform.message")}</label>
+                  <label className="app-label">{t("pages.newProform.message")}</label>
                   <textarea
                     className={textareaClassName}
                     value={emailMessage}
@@ -685,7 +685,7 @@ export function NewProformPage() {
                   type="button"
                   onClick={() => void handleSendByEmail()}
                   disabled={isSendingEmail}
-                  className="rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                  className="app-button-primary"
                 >
                   {isSendingEmail ? t("pages.newProform.sending") : t("pages.newProform.sendByEmail")}
                 </button>

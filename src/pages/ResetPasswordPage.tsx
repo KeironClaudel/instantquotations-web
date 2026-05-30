@@ -18,26 +18,38 @@ export function ResetPasswordPage() {
   } = useResetPasswordPage();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-950">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900">
-        <div className="mb-6">
-          <div className="mb-4 flex justify-end gap-2">
+    <div className="app-auth-shell">
+      <div className="app-auth-frame">
+        <div className="app-auth-split">
+          <section className="app-auth-hero">
+            <div className="app-page-badge border-white/20 bg-white/10 text-white">
+              InstantProforms
+            </div>
+
+            <h1 className="app-auth-title mt-5">{t("pages.resetPassword.title")}</h1>
+            <p className="app-auth-copy">{t("pages.resetPassword.description")}</p>
+          </section>
+
+          <section className="app-auth-card">
+          <div className="app-auth-utility">
             <ThemeSwitcher compact />
             <LanguageSwitcher compact />
           </div>
 
-          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {t("pages.resetPassword.title")}
-          </h1>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            {t("pages.resetPassword.description")}
-          </p>
-        </div>
+          <div className="mb-6">
+            <div className="app-page-badge">{t("components.appShell.workspace")}</div>
+            <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
+              {t("pages.resetPassword.title")}
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
+              {t("pages.resetPassword.description")}
+            </p>
+          </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="app-auth-form" onSubmit={handleSubmit}>
           <div>
             <label
-              className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
+              className="app-label"
               htmlFor="new-password"
             >
               {t("pages.resetPassword.newPassword")}
@@ -45,20 +57,20 @@ export function ResetPasswordPage() {
             <input
               id="new-password"
               type="password"
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none ring-0 focus:border-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500"
+              className="app-input"
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
               autoComplete="new-password"
               required
             />
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p className="app-helper">
               {t("pages.resetPassword.passwordHint")}
             </p>
           </div>
 
           <div>
             <label
-              className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
+              className="app-label"
               htmlFor="confirm-password"
             >
               {t("pages.resetPassword.confirmNewPassword")}
@@ -66,7 +78,7 @@ export function ResetPasswordPage() {
             <input
               id="confirm-password"
               type="password"
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none ring-0 focus:border-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500"
+              className="app-input"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               autoComplete="new-password"
@@ -75,17 +87,17 @@ export function ResetPasswordPage() {
           </div>
 
           {!token ? (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            <div className="app-feedback-warning">
               {t("pages.resetPassword.invalidTokenBanner")}
             </div>
           ) : null}
 
           {feedback ? (
             <div
-              className={`rounded-xl px-3 py-2 text-sm ${
+              className={`${
                 feedback.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700"
+                  ? "app-feedback-success"
+                  : "app-feedback-error"
               }`}
             >
               {feedback.message}
@@ -95,17 +107,19 @@ export function ResetPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting || !token}
-            className="w-full rounded-xl border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary w-full"
           >
             {isSubmitting ? t("pages.resetPassword.updating") : t("pages.resetPassword.updatePassword")}
           </button>
 
-          <div className="text-center text-sm text-slate-600 dark:text-slate-400">
-            <Link to="/login" className="font-medium text-slate-900 underline dark:text-slate-100">
+          <div className="text-center text-sm text-[var(--ip-text-soft)]">
+            <Link to="/login" className="font-semibold text-[var(--ip-primary)] underline">
               {t("pages.resetPassword.backToSignIn")}
             </Link>
           </div>
         </form>
+          </section>
+        </div>
       </div>
     </div>
   );

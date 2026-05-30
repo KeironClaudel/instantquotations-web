@@ -22,7 +22,7 @@ export function OnboardingCompanyPage() {
   } = useOnboardingCompanyPage();
 
   const inputClassName =
-    "w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800";
+    "app-input";
 
   if (shouldRedirect) {
     return <Navigate to="/app" replace />;
@@ -30,37 +30,37 @@ export function OnboardingCompanyPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-8 text-center">
-        <div className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+      <div className="app-page-head text-center">
+        <div className="app-page-badge">
           {t("pages.onboardingCompany.badge")}
         </div>
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <h1 className="app-page-title mt-3">
           {t("pages.onboardingCompany.title")}
         </h1>
 
-        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+        <p className="app-page-copy mx-auto">
           {t("pages.onboardingCompany.description")}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <form
-          className="space-y-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6"
+          className="app-card space-y-6 p-5 sm:p-6"
           onSubmit={handleSubmit}
         >
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            <h2 className="app-section-heading">
               {t("pages.onboardingCompany.businessEssentials")}
             </h2>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            <p className="app-section-copy">
               {t("pages.onboardingCompany.businessEssentialsDescription")}
             </p>
           </div>
 
           <div className="grid gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("common.labels.displayName")}</label>
+              <label className="app-label">{t("common.labels.displayName")}</label>
               <input
                 className={inputClassName}
                 value={displayName}
@@ -71,7 +71,7 @@ export function OnboardingCompanyPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.taxPercentage")}</label>
+              <label className="app-label">{t("pages.onboardingCompany.taxPercentage")}</label>
               <input
                 type="number"
                 min="0"
@@ -85,7 +85,7 @@ export function OnboardingCompanyPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.currencySymbol")}</label>
+              <label className="app-label">{t("pages.onboardingCompany.currencySymbol")}</label>
               <input
                 className={inputClassName}
                 value={currencySymbol}
@@ -96,7 +96,7 @@ export function OnboardingCompanyPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.taxLabel")}</label>
+              <label className="app-label">{t("pages.onboardingCompany.taxLabel")}</label>
               <input
                 className={inputClassName}
                 value={taxLabel}
@@ -106,7 +106,7 @@ export function OnboardingCompanyPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">{t("pages.onboardingCompany.logoOptional")}</label>
+              <label className="app-label">{t("pages.onboardingCompany.logoOptional")}</label>
               <input
                 type="file"
                 accept=".png,.jpg,.jpeg,.webp"
@@ -116,33 +116,33 @@ export function OnboardingCompanyPage() {
             </div>
           </div>
 
-          {feedback ? (
-            <div
-              className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
-                feedback.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700"
-              }`}
-            >
-              {feedback.message}
+        {feedback ? (
+          <div
+            className={`rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
+              feedback.type === "success"
+                  ? "app-feedback-success"
+                  : "app-feedback-error"
+            }`}
+          >
+            {feedback.message}
             </div>
           ) : null}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary w-full"
           >
             {isSubmitting ? t("pages.onboardingCompany.savingSetup") : t("pages.onboardingCompany.continueToProforms")}
           </button>
         </form>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <section className="app-card p-5 sm:p-6">
+          <h2 className="app-section-heading">
             {t("pages.onboardingCompany.livePreview")}
           </h2>
 
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          <p className="app-section-copy">
             {t("pages.onboardingCompany.livePreviewDescription")}
           </p>
 

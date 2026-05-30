@@ -75,18 +75,23 @@ export function ProformDetailsPage() {
   return (
     <div className="mx-auto max-w-6xl px-1 sm:px-0">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <SectionHeader
-          title={proform.number}
-          description={t("pages.proformDetails.createdOn", {
-            clientName: proform.clientName,
-            date: issuedAtLabel,
-          })}
-        />
+        <div className="app-page-head mb-0">
+          <div className="app-page-badge">{t("pages.proformsList.title")}</div>
+          <div className="mt-3">
+            <SectionHeader
+              title={proform.number}
+              description={t("pages.proformDetails.createdOn", {
+                clientName: proform.clientName,
+                date: issuedAtLabel,
+              })}
+            />
+          </div>
+        </div>
 
         <div className="flex flex-wrap gap-3">
           <Link
             to="/app/proforms"
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="app-button-secondary"
           >
             {t("common.actions.back")}
           </Link>
@@ -95,7 +100,7 @@ export function ProformDetailsPage() {
             type="button"
             onClick={() => void handleDownloadPdf()}
             disabled={isDownloading}
-            className="rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 transition hover:bg-slate-200 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="app-button-primary"
           >
             {isDownloading ? t("pages.proformDetails.downloading") : t("pages.proformDetails.downloadPdf")}
           </button>
@@ -104,7 +109,7 @@ export function ProformDetailsPage() {
             type="button"
             onClick={() => void handleShare()}
             disabled={isSharing}
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="app-button-secondary"
           >
             {isSharing ? t("pages.proformDetails.sharing") : t("pages.proformDetails.share")}
           </button>
@@ -113,7 +118,7 @@ export function ProformDetailsPage() {
             type="button"
             onClick={() => void handleSendToClientEmail()}
             disabled={isSendingToClientEmail || !proform.clientEmail}
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="app-button-secondary"
           >
             {isSendingToClientEmail ? t("pages.proformDetails.sending") : t("pages.proformDetails.sendToClientEmail")}
           </button>
@@ -124,8 +129,8 @@ export function ProformDetailsPage() {
         <div
           className={`mb-6 rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
             feedback.type === "success"
-              ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-              : "border border-red-200 bg-red-50 text-red-700"
+              ? "app-feedback-success"
+              : "app-feedback-error"
           }`}
         >
           {feedback.message}
@@ -134,8 +139,8 @@ export function ProformDetailsPage() {
 
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.proformDetails.clientInformation")}
             </h2>
 
@@ -188,16 +193,16 @@ export function ProformDetailsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.proformDetails.updateStatus")}
             </h2>
 
             <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
               <div>
-                <label className="mb-1 block text-sm font-medium">{t("common.labels.status")}</label>
+                <label className="app-label">{t("common.labels.status")}</label>
                 <select
-                  className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                  className="app-input"
                   value={selectedStatus}
                   onChange={(event) => setSelectedStatus(event.target.value)}
                   disabled={isUpdatingStatus}
@@ -214,15 +219,15 @@ export function ProformDetailsPage() {
                 type="button"
                 onClick={() => void handleUpdateStatus()}
                 disabled={isUpdatingStatus || selectedStatus === proform.status}
-                className="rounded-2xl border border-slate-300 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                className="app-button-primary"
               >
                 {isUpdatingStatus ? t("pages.proformDetails.saving") : t("pages.proformDetails.saveStatus")}
               </button>
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.proformDetails.documentSections")}
             </h2>
 
@@ -234,8 +239,8 @@ export function ProformDetailsPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.proformDetails.items")}
             </h2>
 
@@ -292,12 +297,12 @@ export function ProformDetailsPage() {
         </div>
 
         <div className="space-y-6">
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <h2 className="mb-5 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <section className="app-card p-5 sm:p-6">
+            <h2 className="mb-5 app-section-heading">
               {t("pages.proformDetails.financialSummary")}
             </h2>
 
-            <div className="space-y-3 rounded-2xl bg-slate-50 p-4 text-sm dark:bg-slate-950">
+            <div className="app-card-inset space-y-3 p-4 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-slate-600 dark:text-slate-400">{t("common.finance.subtotal")}</span>
                 <span className="font-medium text-slate-900 dark:text-slate-100">

@@ -61,32 +61,39 @@ export function ProformsListPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-1 sm:px-0">
-      <SectionHeader
-        title={t("pages.proformsList.title")}
-        description={t("pages.proformsList.description")}
-      />
+      <div className="app-page-head">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="app-page-badge">{t("pages.newProform.badge")}</div>
+            <div className="mt-3">
+              <SectionHeader
+                title={t("pages.proformsList.title")}
+                description={t("pages.proformsList.description")}
+              />
+            </div>
+          </div>
 
-      {feedback ? (
-        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700 shadow-sm">
-          {feedback.message}
+          <Link to="/app/proforms/new" className="app-button-primary">
+            {t("pages.dashboard.createNewProform")}
+          </Link>
         </div>
-      ) : null}
+      </div>
 
-      <section className="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+      {feedback ? <div className="app-feedback-error mb-6">{feedback.message}</div> : null}
+
+      <section className="app-card mb-6 p-5 sm:p-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">{t("pages.proformsList.filterTitle")}</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {t("pages.proformsList.filterDescription")}
-              </p>
+              <h2 className="app-section-heading">{t("pages.proformsList.filterTitle")}</h2>
+              <p className="app-section-copy">{t("pages.proformsList.filterDescription")}</p>
             </div>
 
             <button
               type="button"
               onClick={clearFilters}
               disabled={!hasActiveFilters}
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+              className="app-button-secondary"
             >
               {t("common.actions.clearFilters")}
             </button>
@@ -94,24 +101,24 @@ export function ProformsListPage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="xl:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("pages.proformsList.clientName")}</label>
+              <label className="app-label">{t("pages.proformsList.clientName")}</label>
               <input
                 type="text"
                 value={clientFilter}
                 onChange={(event) => setClientFilter(event.target.value)}
                 placeholder={t("pages.proformsList.searchByClient")}
-                className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                className="app-input"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("common.labels.status")}</label>
+              <label className="app-label">{t("common.labels.status")}</label>
               <select
                 value={statusFilter}
                 onChange={(event) =>
                   setStatusFilter(event.target.value as (typeof statusOptions)[number])
                 }
-                className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                className="app-input"
               >
                 {statusOptions.map((status) => (
                   <option key={status} value={status}>
@@ -121,30 +128,43 @@ export function ProformsListPage() {
               </select>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2 xl:col-span-1">
+            <div className="grid gap-4 sm:grid-cols-2 xl:col-span-1 xl:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("pages.proformsList.from")}</label>
+                <label className="app-label">{t("pages.proformsList.from")}</label>
                 <input
                   type="date"
                   value={fromDateFilter}
                   max={toDateFilter || undefined}
                   onChange={(event) => setFromDateFilter(event.target.value)}
-                  className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                  className="app-input"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("pages.proformsList.to")}</label>
+                <label className="app-label">{t("pages.proformsList.to")}</label>
                 <input
                   type="date"
                   value={toDateFilter}
                   min={fromDateFilter || undefined}
                   max={todayDateValue}
                   onChange={(event) => setToDateFilter(event.target.value)}
-                  className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                  className="app-input"
                 />
               </div>
             </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pt-1">
+            <span className="app-chip app-chip-strong">
+              {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
+            </span>
+            <span className="app-chip">
+              {t("pages.proformsList.paginationSummary", {
+                start: startItem,
+                end: endItem,
+                total: totalCount,
+              })}
+            </span>
           </div>
         </div>
       </section>
@@ -154,10 +174,7 @@ export function ProformsListPage() {
           title={t("pages.proformsList.noProformsTitle")}
           description={t("pages.proformsList.noProformsDescription")}
           action={
-            <Link
-              to="/app/proforms/new"
-              className="inline-flex rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
-            >
+            <Link to="/app/proforms/new" className="app-button-primary">
               {t("common.actions.createFirst")}
             </Link>
           }
@@ -167,19 +184,15 @@ export function ProformsListPage() {
           title={t("pages.proformsList.noMatchesTitle")}
           description={t("pages.proformsList.noMatchesDescription")}
           action={
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="inline-flex rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
-            >
+            <button type="button" onClick={clearFilters} className="app-button-primary">
               {t("common.actions.resetFilters")}
             </button>
           }
         />
       ) : (
         <div className="space-y-4">
-          <section className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+          <section className="app-card flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-[var(--ip-text-soft)]">
               {t("pages.proformsList.paginationSummary", {
                 start: startItem,
                 end: endItem,
@@ -188,12 +201,14 @@ export function ProformsListPage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+              <label className="flex items-center gap-2 text-sm text-[var(--ip-text-soft)]">
                 <span>{t("pages.proformsList.perPage")}</span>
                 <select
                   value={pageSize}
-                  onChange={(event) => setPageSize(Number(event.target.value) as (typeof pageSizeOptions)[number])}
-                  className="rounded-2xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
+                  onChange={(event) =>
+                    setPageSize(Number(event.target.value) as (typeof pageSizeOptions)[number])
+                  }
+                  className="app-input min-h-0 py-2"
                 >
                   {pageSizeOptions.map((option) => (
                     <option key={option} value={option}>
@@ -208,12 +223,12 @@ export function ProformsListPage() {
                   type="button"
                   onClick={goToPreviousPage}
                   disabled={isOnFirstPage}
-                  className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                  className="app-button-secondary"
                 >
                   {t("pages.proformsList.previous")}
                 </button>
 
-                <span className="min-w-[110px] text-center text-sm text-slate-600 dark:text-slate-400">
+                <span className="min-w-[110px] text-center text-sm text-[var(--ip-text-soft)]">
                   {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
                 </span>
 
@@ -221,7 +236,7 @@ export function ProformsListPage() {
                   type="button"
                   onClick={goToNextPage}
                   disabled={isOnLastPage}
-                  className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-800"
+                  className="app-button-secondary"
                 >
                   {t("pages.proformsList.next")}
                 </button>
@@ -235,61 +250,75 @@ export function ProformsListPage() {
             return (
               <Link
                 key={proform.id}
-              to={`/app/proforms/${proform.id}`}
-              className="block rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/80"
-            >
+                to={`/app/proforms/${proform.id}`}
+                className="app-card block p-5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(23,59,122,0.16)] sm:p-6"
+              >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                      {proform.number}
-                    </h2>
+                  <div className="min-w-0">
+                    <div className="app-kicker">{t("pages.proformsList.title")}</div>
 
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${getProformStatusBadgeClassName(proform.status)}`}
-                    >
-                      {getProformStatusLabel(proform.status, t)}
-                    </span>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                        {proform.number}
+                      </h2>
+
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${getProformStatusBadgeClassName(proform.status)}`}
+                      >
+                        {getProformStatusLabel(proform.status, t)}
+                      </span>
+
+                      <span className="app-chip">
+                        {formatDate(
+                          proform.issuedAtUtc,
+                          i18n.resolvedLanguage?.startsWith("es") ? "es-CR" : "en-US",
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+                      {t("pages.proformsList.clientPrefix")}{" "}
+                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                        {proform.clientName}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+                      <span>{proform.clientEmail || t("common.defaults.noEmail")}</span>
+                      <span>{proform.clientPhone || t("common.defaults.noPhone")}</span>
+                    </div>
                   </div>
 
-                  <div className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                    {t("pages.proformsList.clientPrefix")} <span className="font-medium text-slate-800 dark:text-slate-200">{proform.clientName}</span>
-                  </div>
+                  <div className="app-card-inset grid min-w-[220px] gap-2 p-4 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 dark:text-slate-400">
+                        {t("common.finance.subtotal")}
+                      </span>
+                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                        {currencySymbol}
+                        {formatMoneyAmount(proform.subtotal)}
+                      </span>
+                    </div>
 
-                  <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
-                    <span>{proform.clientEmail || t("common.defaults.noEmail")}</span>
-                    <span>{proform.clientPhone || t("common.defaults.noPhone")}</span>
-                    <span>{formatDate(proform.issuedAtUtc, i18n.resolvedLanguage?.startsWith("es") ? "es-CR" : "en-US")}</span>
-                  </div>
-                </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 dark:text-slate-400">
+                        {companySettings?.taxLabel ?? t("common.defaults.taxLabel")} (
+                        {formatPercent(proform.taxPercentage)})
+                      </span>
+                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                        {currencySymbol}
+                        {formatMoneyAmount(proform.taxAmount)}
+                      </span>
+                    </div>
 
-                <div className="grid min-w-[220px] gap-2 rounded-2xl bg-slate-50 p-4 text-sm dark:bg-slate-950">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500 dark:text-slate-400">{t("common.finance.subtotal")}</span>
-                    <span className="font-medium text-slate-800 dark:text-slate-200">
-                      {currencySymbol}
-                      {formatMoneyAmount(proform.subtotal)}
-                    </span>
+                    <div className="flex items-center justify-between border-t border-slate-300 pt-2 text-base font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">
+                      <span>{t("common.finance.total")}</span>
+                      <span>
+                        {currencySymbol}
+                        {formatMoneyAmount(proform.total)}
+                      </span>
+                    </div>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500 dark:text-slate-400">
-                      {companySettings?.taxLabel ?? t("common.defaults.taxLabel")} ({formatPercent(proform.taxPercentage)})
-                    </span>
-                    <span className="font-medium text-slate-800 dark:text-slate-200">
-                      {currencySymbol}
-                      {formatMoneyAmount(proform.taxAmount)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-slate-300 pt-2 text-base font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">
-                    <span>{t("common.finance.total")}</span>
-                    <span>
-                      {currencySymbol}
-                      {formatMoneyAmount(proform.total)}
-                    </span>
-                  </div>
-                </div>
                 </div>
               </Link>
             );
