@@ -747,6 +747,63 @@ html.dark body {
     display: grid;
     gap: 1rem;
   }
+
+  .app-system-screen {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+  }
+
+  .app-system-card {
+    width: min(100%, 46rem);
+    border: 1px solid var(--ip-border);
+    background: var(--ip-surface-strong);
+    border-radius: calc(var(--ip-radius-xl) + 0.2rem);
+    box-shadow: var(--ip-shadow-strong);
+    padding: 1.5rem;
+  }
+
+  .app-system-diagnostics {
+    margin: 1.5rem 0 0;
+    border: 1px solid var(--ip-border);
+    background: color-mix(in srgb, var(--ip-surface-muted) 90%, transparent);
+    border-radius: var(--ip-radius-lg);
+    color: var(--ip-text-soft);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .app-system-dev-panel {
+    margin-top: 1.25rem;
+    border: 1px solid var(--ip-border);
+    background: color-mix(in srgb, var(--ip-surface-muted) 88%, transparent);
+    border-radius: var(--ip-radius-lg);
+    overflow: hidden;
+  }
+
+  .app-system-dev-panel summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 0.95rem 1rem;
+    color: var(--ip-text);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .app-system-dev-panel summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .app-system-dev-panel .app-system-diagnostics {
+    margin: 0;
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
 }
 
 @media (min-width: 640px) {

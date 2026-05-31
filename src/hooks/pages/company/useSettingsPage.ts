@@ -6,6 +6,7 @@ import {
   replaceCompanyLogo,
   updateCompanySettings,
 } from "@/lib/api/companySettingsApi";
+import { isCompanySetupComplete } from "@/lib/utils/companySetup";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
 import { getProformSeriesPreview } from "@/lib/utils/proformNumber";
 import type { CompanySettings } from "@/types/company";
@@ -69,7 +70,7 @@ function buildFormState(settings: CompanySettings): SettingsFormState {
 
 export function useSettingsPage() {
   const { t } = useTranslation();
-  const { companySettings, refreshCompanySettings } = useAuth();
+  const { companySettings, companySettingsSource, refreshCompanySettings } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -106,6 +107,8 @@ export function useSettingsPage() {
   }, [t]);
 
   const activeCompanySettings = settingsSnapshot ?? companySettings;
+  const canEditRealCompanySettings =
+    companySettingsSource === "remote" && isCompanySetupComplete(activeCompanySettings);
 
   const emailDeliveryStatus = useMemo<EmailDeliveryStatus>(() => {
     if (activeCompanySettings?.isResendEmailDeliveryConfigured) {
@@ -147,6 +150,11 @@ export function useSettingsPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     clearFeedback();
+
+    if (!canEditRealCompanySettings) {
+      setFeedback(createErrorFeedback(t("pages.settings.feedback.realSettingsRequired")));
+      return;
+    }
 
     const parsedTaxPercentage = Number(form.taxPercentage);
 
@@ -206,6 +214,12 @@ export function useSettingsPage() {
   async function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
     clearFeedback();
 
+    if (!canEditRealCompanySettings) {
+      setFeedback(createErrorFeedback(t("pages.settings.feedback.realSettingsRequired")));
+      event.target.value = "";
+      return;
+    }
+
     const file = event.target.files?.[0];
     if (!file) {
       return;
@@ -234,6 +248,7 @@ export function useSettingsPage() {
     form,
     handleLogoChange,
     handleSubmit,
+    canEditRealCompanySettings,
     isLoading,
     isSaving,
     isUploadingLogo,

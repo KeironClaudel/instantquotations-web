@@ -274,6 +274,8 @@ export const es = {
         invalidItemNumbers: "La cantidad debe ser mayor que 0 y el precio unitario no puede ser negativo.",
         createFailed: "No se pudo crear la cotización.",
         createdSuccess: "La cotización {{number}} se creó correctamente.",
+        realSettingsRequired:
+          "Se requieren los ajustes reales de la empresa antes de crear, descargar, compartir o enviar cotizaciones. Primero reintenta la carga del espacio de trabajo.",
         queued:
           "No había conexión disponible. La cotización quedó en cola y se reintentará automáticamente cuando vuelva la red.",
       },
@@ -527,6 +529,8 @@ export const es = {
         saveSuccess: "Los ajustes de la empresa se actualizaron correctamente.",
         logoFailed: "No se pudo actualizar el logo de la empresa.",
         logoSuccess: "El logo de la empresa se actualizó correctamente.",
+        realSettingsRequired:
+          "Deben cargarse los ajustes reales de la empresa antes de guardar cambios o subir un logo.",
       },
     },
   },

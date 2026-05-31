@@ -11,6 +11,7 @@ export function SettingsPage() {
     form,
     handleLogoChange,
     handleSubmit,
+    canEditRealCompanySettings,
     isLoading,
     isSaving,
     isUploadingLogo,
@@ -58,6 +59,12 @@ export function SettingsPage() {
 
       <div className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
         <form className="space-y-6" onSubmit={handleSubmit}>
+          {!canEditRealCompanySettings ? (
+            <div className="app-feedback-warning">
+              {t("pages.settings.feedback.realSettingsRequired")}
+            </div>
+          ) : null}
+
           <section className="app-card p-5 sm:p-6">
             <h2 className="mb-5 app-section-heading">
               {t("common.labels.companyInformation")}
@@ -292,7 +299,7 @@ export function SettingsPage() {
 
           <button
             type="submit"
-            disabled={isSaving}
+            disabled={isSaving || !canEditRealCompanySettings}
             className="app-button-primary w-full"
           >
             {isSaving ? t("pages.settings.savingChanges") : t("pages.settings.saveSettings")}
@@ -327,7 +334,7 @@ export function SettingsPage() {
                   accept=".png,.jpg,.jpeg,.webp"
                   className="hidden"
                   onChange={(event) => void handleLogoChange(event)}
-                  disabled={isUploadingLogo}
+                  disabled={isUploadingLogo || !canEditRealCompanySettings}
                 />
               </label>
             </div>

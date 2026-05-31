@@ -1,4 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/PageLoader";
@@ -44,11 +45,13 @@ function createFormState(client: ClientRecord | null): ClientFormState {
 export function ClientsPage() {
   const { i18n, t } = useTranslation();
   const locale = i18n.resolvedLanguage?.startsWith("es") ? "es" : "en";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParamsKey = searchParams.toString();
 
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [form, setForm] = useState<ClientFormState>(emptyFormState);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -75,6 +78,31 @@ export function ClientsPage() {
       );
     });
   }, [clients, deferredSearch]);
+
+  useEffect(() => {
+    const searchFromParams = searchParams.get("search") ?? "";
+
+    if (searchFromParams !== search) {
+      setSearch(searchFromParams);
+    }
+  }, [searchParamsKey]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const normalizedSearch = search.trim();
+
+    if (normalizedSearch) {
+      nextParams.set("search", normalizedSearch);
+    } else {
+      nextParams.delete("search");
+    }
+
+    if (nextParams.toString() === searchParamsKey) {
+      return;
+    }
+
+    setSearchParams(nextParams, { replace: true, preventScrollReset: true });
+  }, [search, searchParamsKey, setSearchParams]);
 
   useEffect(() => {
     async function loadClients() {

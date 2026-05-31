@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { PageLoader } from "@/components/ui/PageLoader";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { formatMoneyAmount } from "@/lib/utils/numberFormat";
 import { getProformCurrencySymbol } from "@/lib/utils/proformCurrency";
@@ -21,6 +20,31 @@ function formatPercent(value: number | null | undefined): string {
   return `${value ?? 0}%`;
 }
 
+function ProformsListSkeleton() {
+  return (
+    <div className="space-y-4" aria-hidden="true">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <section key={index} className="app-card animate-pulse p-5 sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="h-3 w-28 rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-6 w-40 rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-4 w-52 rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-4 w-60 rounded-full bg-slate-200 dark:bg-slate-800" />
+            </div>
+
+            <div className="app-card-inset min-w-[220px] space-y-3 p-4">
+              <div className="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export function ProformsListPage() {
   const { i18n, t } = useTranslation();
   const {
@@ -35,12 +59,15 @@ export function ProformsListPage() {
     goToNextPage,
     goToPreviousPage,
     hasActiveFilters,
+    hasLoadedAtLeastOnce,
     isLoading,
     isOnFirstPage,
     isOnLastPage,
+    isRefreshingResults,
     proforms,
     pageSize,
     pageSizeOptions,
+    retryLoad,
     setClientFilter,
     setFromDateFilter,
     setPageSize,
@@ -54,10 +81,6 @@ export function ProformsListPage() {
     totalCount,
     totalPages,
   } = useProformsListPage();
-
-  if (isLoading) {
-    return <PageLoader message={t("pages.proformsList.loading")} />;
-  }
 
   return (
     <div className="mx-auto max-w-6xl px-1 sm:px-0">
@@ -78,8 +101,6 @@ export function ProformsListPage() {
           </Link>
         </div>
       </div>
-
-      {feedback ? <div className="app-feedback-error mb-6">{feedback.message}</div> : null}
 
       <section className="app-card mb-6 p-5 sm:p-6">
         <div className="flex flex-col gap-4">
@@ -155,6 +176,9 @@ export function ProformsListPage() {
           </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
+            {isRefreshingResults ? (
+              <span className="app-chip">{t("pages.proformsList.loading")}</span>
+            ) : null}
             <span className="app-chip app-chip-strong">
               {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
             </span>
@@ -169,7 +193,22 @@ export function ProformsListPage() {
         </div>
       </section>
 
-      {!hasActiveFilters && proforms.length === 0 ? (
+      {feedback ? (
+        <section className="app-card mb-6 p-4 sm:p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="app-feedback-error">{feedback.message}</div>
+            <button type="button" onClick={retryLoad} className="app-button-secondary">
+              {t("common.actions.retryNow")}
+            </button>
+          </div>
+        </section>
+      ) : null}
+
+      {!hasLoadedAtLeastOnce && isLoading ? (
+        <ProformsListSkeleton />
+      ) : !hasLoadedAtLeastOnce && feedback ? (
+        null
+      ) : !hasActiveFilters && proforms.length === 0 ? (
         <EmptyState
           title={t("pages.proformsList.noProformsTitle")}
           description={t("pages.proformsList.noProformsDescription")}
@@ -190,7 +229,7 @@ export function ProformsListPage() {
           }
         />
       ) : (
-        <div className="space-y-4">
+        <div className={`space-y-4 transition-opacity ${isRefreshingResults ? "opacity-70" : "opacity-100"}`}>
           <section className="app-card flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-[var(--ip-text-soft)]">
               {t("pages.proformsList.paginationSummary", {

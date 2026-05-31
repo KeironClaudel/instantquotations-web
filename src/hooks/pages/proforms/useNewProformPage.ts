@@ -7,6 +7,7 @@ import { createProformShareLink, downloadProformPdf, sendProformByEmail } from "
 import { copyTextToClipboard } from "@/lib/utils/clipboard";
 import { downloadBlobFile } from "@/lib/utils/fileDownload";
 import { createErrorFeedback, createSuccessFeedback } from "@/lib/utils/feedback";
+import { isCompanySetupComplete } from "@/lib/utils/companySetup";
 import {
   calculateSubtotal,
   calculateTaxAmount,
@@ -43,7 +44,7 @@ function normalizeClientText(value: string): string {
 
 export function useNewProformPage() {
   const { t } = useTranslation();
-  const { companySettings, user } = useAuth();
+  const { companySettings, companySettingsSource, user } = useAuth();
 
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -114,6 +115,8 @@ export function useNewProformPage() {
     selectedClientId === null &&
     filteredClients.length > 0 &&
     normalizeClientText(clientName).length >= 2;
+  const canPerformQuotationActions =
+    companySettingsSource === "remote" && isCompanySetupComplete(companySettings);
 
   function clearFeedback() {
     setFeedback(null);
@@ -206,6 +209,11 @@ export function useNewProformPage() {
   async function handleDownloadPdf() {
     clearFeedback();
 
+    if (!canPerformQuotationActions) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.realSettingsRequired")));
+      return;
+    }
+
     if (!createdProform?.id) {
       setFeedback(createErrorFeedback(t("pages.newProform.feedback.missingProformId")));
       return;
@@ -227,6 +235,11 @@ export function useNewProformPage() {
   async function handleCreateShareLink() {
     clearFeedback();
 
+    if (!canPerformQuotationActions) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.realSettingsRequired")));
+      return;
+    }
+
     if (!createdProform?.id) {
       setFeedback(createErrorFeedback(t("pages.newProform.feedback.missingProformId")));
       return;
@@ -247,6 +260,11 @@ export function useNewProformPage() {
 
   async function handleNativeShare() {
     clearFeedback();
+
+    if (!canPerformQuotationActions) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.realSettingsRequired")));
+      return;
+    }
 
     if (!createdProform?.id) {
       setFeedback(createErrorFeedback(t("pages.newProform.feedback.missingProformId")));
@@ -296,6 +314,11 @@ export function useNewProformPage() {
   async function handleSendByEmail() {
     clearFeedback();
 
+    if (!canPerformQuotationActions) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.realSettingsRequired")));
+      return;
+    }
+
     if (!createdProform?.id) {
       setFeedback(createErrorFeedback(t("pages.newProform.feedback.missingProformId")));
       return;
@@ -340,6 +363,11 @@ export function useNewProformPage() {
     event.preventDefault();
 
     clearFeedback();
+
+    if (!canPerformQuotationActions) {
+      setFeedback(createErrorFeedback(t("pages.newProform.feedback.realSettingsRequired")));
+      return;
+    }
 
     const normalizedItems = items
       .map((item) => ({
@@ -458,6 +486,7 @@ export function useNewProformPage() {
     clientPhone,
     clients,
     companySettings,
+    canPerformQuotationActions,
     createdProform,
     currency,
     currencySymbol,

@@ -1,5 +1,13 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 import { getCookieValue } from "@/lib/utils/cookies";
+import {
+  buildRequestUrl,
+  createApiClientError,
+  getResponseHeader,
+  isApiClientError,
+  isUnexpectedJsonResponseContent,
+  toApiClientError,
+} from "@/lib/api/apiErrors";
 
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 const apiBaseUrl =
@@ -72,8 +80,42 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 apiClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
+  (response) => {
+    const responseType = response.config.responseType;
+    const shouldValidateJson =
+      !responseType || responseType === "json" || responseType === "text";
+
+    if (!shouldValidateJson) {
+      return response;
+    }
+
+    const contentType = getResponseHeader(response.headers, "content-type");
+
+    if (isUnexpectedJsonResponseContent(contentType, response.data)) {
+      throw createApiClientError({
+        kind: "invalid-content-type",
+        endpoint: buildRequestUrl(response.config.baseURL, response.config.url),
+        method: response.config.method?.toUpperCase() ?? null,
+        statusCode: response.status,
+        code: null,
+        contentType,
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator === "undefined" ? "Unknown" : navigator.userAgent,
+        message: "The API returned HTML or another unexpected response instead of JSON.",
+      });
+    }
+
+    return response;
+  },
+  async (error: unknown) => {
+    if (isApiClientError(error)) {
+      return Promise.reject(error);
+    }
+
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(toApiClientError(error));
+    }
+
     const config = error.config;
 
     if (
@@ -93,7 +135,7 @@ apiClient.interceptors.response.use(
       return apiClient(config);
     } catch {
       notifySessionExpired();
-      return Promise.reject(error);
+      return Promise.reject(toApiClientError(error));
     }
   },
 );

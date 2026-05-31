@@ -52,8 +52,9 @@ function getUserInitials(fullName?: string | null) {
 
 export function AppShell() {
   const { t } = useTranslation();
-  const { companySettings, logout, user } = useAuth();
-  const isSetupComplete = isCompanySetupComplete(companySettings);
+  const { companySettings, companySettingsSource, logout, user } = useAuth();
+  const isSetupComplete =
+    companySettingsSource === "remote" && isCompanySetupComplete(companySettings);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileHeaderHeight, setMobileHeaderHeight] = useState(0);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -151,12 +152,12 @@ export function AppShell() {
 
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[0.95rem] font-extrabold tracking-[-0.02em] text-[var(--ip-text)] sm:text-base">
-                    {companySettings?.displayName ?? "InstantQuotations"}
+                    {companySettings.displayName || "InstantProforms"}
                   </div>
 
                   <div className="mt-1 flex flex-wrap items-center gap-1.5 pb-1 sm:gap-2 lg:overflow-x-auto lg:flex-nowrap lg:whitespace-nowrap lg:[-ms-overflow-style:none] lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
                     <span className="app-chip app-chip-strong">
-                      {t("components.appShell.tax")}: {companySettings?.taxPercentage ?? 0}%
+                      {t("components.appShell.tax")}: {companySettings.taxPercentage ?? 0}%
                     </span>
 
                     {!isSetupComplete ? (

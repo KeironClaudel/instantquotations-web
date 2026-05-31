@@ -4,11 +4,27 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/providers/useAuth";
 import { isCompanySetupComplete } from "@/lib/utils/companySetup";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { StartupErrorScreen } from "@/components/ui/StartupErrorScreen";
+
+const DEVELOPER_DIAGNOSTICS_EMAIL = "keironqc@gmail.com";
 
 export function ProtectedRoute({ children }: PropsWithChildren) {
   const { t } = useTranslation();
-  const { isAuthenticated, isLoading, companySettings } = useAuth();
+  const {
+    companySettings,
+    companySettingsError,
+    companySettingsSource,
+    dismissCompanySettingsError,
+    hasDismissedCompanySettingsError,
+    isAuthenticated,
+    isLoading,
+    retryCompanySettingsLoad,
+    user,
+  } = useAuth();
   const location = useLocation();
+  const showDeveloperDiagnostics =
+    import.meta.env.DEV &&
+    user?.email?.trim().toLowerCase() === DEVELOPER_DIAGNOSTICS_EMAIL;
 
   if (isLoading) {
     return <PageLoader message={t("components.protectedRoute.loadingWorkspace")} />;
@@ -19,13 +35,29 @@ export function ProtectedRoute({ children }: PropsWithChildren) {
   }
 
   const isOnboardingRoute = location.pathname.startsWith("/app/onboarding");
-  const isSetupComplete = isCompanySetupComplete(companySettings);
+  const isSetupComplete =
+    companySettingsSource === "remote" && isCompanySetupComplete(companySettings);
 
-  if (!isSetupComplete && !isOnboardingRoute) {
+  if (
+    companySettingsSource === "fallback" &&
+    companySettingsError &&
+    !hasDismissedCompanySettingsError
+  ) {
+    return (
+      <StartupErrorScreen
+        error={companySettingsError}
+        onRetry={retryCompanySettingsLoad}
+        onContinue={dismissCompanySettingsError}
+        showDeveloperDiagnostics={showDeveloperDiagnostics}
+      />
+    );
+  }
+
+  if (companySettingsSource === "remote" && !isSetupComplete && !isOnboardingRoute) {
     return <Navigate to="/app/onboarding/company" replace />;
   }
 
-  if (isSetupComplete && isOnboardingRoute) {
+  if (companySettingsSource === "remote" && isSetupComplete && isOnboardingRoute) {
     return <Navigate to="/app" replace />;
   }
 

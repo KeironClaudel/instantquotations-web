@@ -81,6 +81,7 @@ export function NewProformPage() {
     total,
     updateItem,
     clearSelectedClient,
+    canPerformQuotationActions,
   } = useNewProformPage();
 
   const locale = i18n.resolvedLanguage?.startsWith("es") ? "es" : "en";
@@ -104,6 +105,12 @@ export function NewProformPage() {
       </div>
 
       <form className="space-y-6 sm:space-y-7" onSubmit={handleSubmit}>
+        {!canPerformQuotationActions ? (
+          <div className="app-feedback-warning">
+            {t("pages.newProform.feedback.realSettingsRequired")}
+          </div>
+        ) : null}
+
         <section className="app-card p-5 sm:p-6">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -485,7 +492,7 @@ export function NewProformPage() {
         <div className="grid gap-3 md:grid-cols-2">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !canPerformQuotationActions}
             className="app-button-primary w-full"
           >
             {isSubmitting ? t("pages.newProform.creatingProform") : t("pages.newProform.createProform")}
@@ -593,30 +600,30 @@ export function NewProformPage() {
             </div>
 
             <div className="grid gap-3 md:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => void handleDownloadPdf()}
-                disabled={isDownloading}
-                className="app-button-secondary"
-              >
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadPdf()}
+                  disabled={isDownloading || !canPerformQuotationActions}
+                  className="app-button-secondary"
+                >
                 {isDownloading ? t("pages.newProform.downloading") : t("pages.newProform.downloadPdf")}
               </button>
 
-              <button
-                type="button"
-                onClick={() => void handleCreateShareLink()}
-                disabled={isCreatingShareLink}
-                className="app-button-secondary"
-              >
+                <button
+                  type="button"
+                  onClick={() => void handleCreateShareLink()}
+                  disabled={isCreatingShareLink || !canPerformQuotationActions}
+                  className="app-button-secondary"
+                >
                 {isCreatingShareLink ? t("pages.newProform.creatingLink") : t("pages.newProform.createShareLink")}
               </button>
 
-              <button
-                type="button"
-                onClick={() => void handleNativeShare()}
-                disabled={isSharing}
-                className="app-button-secondary"
-              >
+                <button
+                  type="button"
+                  onClick={() => void handleNativeShare()}
+                  disabled={isSharing || !canPerformQuotationActions}
+                  className="app-button-secondary"
+                >
                 {isSharing ? t("pages.newProform.sharing") : t("pages.newProform.share")}
               </button>
 
@@ -684,7 +691,7 @@ export function NewProformPage() {
                 <button
                   type="button"
                   onClick={() => void handleSendByEmail()}
-                  disabled={isSendingEmail}
+                  disabled={isSendingEmail || !canPerformQuotationActions}
                   className="app-button-primary"
                 >
                   {isSendingEmail ? t("pages.newProform.sending") : t("pages.newProform.sendByEmail")}

@@ -17,8 +17,13 @@ export type GetProformsFilters = {
   toDate?: string;
 };
 
+type GetProformsOptions = {
+  signal?: AbortSignal;
+};
+
 export async function getProforms(
   filters?: GetProformsFilters,
+  options?: GetProformsOptions,
 ): Promise<PagedResult<ProformListItem>> {
   const { data } = await apiClient.get<ProformListItem[] | PagedResult<ProformListItem>>("/api/Proforms", {
     params: {
@@ -29,6 +34,7 @@ export async function getProforms(
       fromDate: filters?.fromDate,
       toDate: filters?.toDate,
     },
+    signal: options?.signal,
   });
 
   if (Array.isArray(data)) {

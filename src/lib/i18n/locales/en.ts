@@ -273,6 +273,8 @@ export const en = {
         invalidItemNumbers: "Quantity must be greater than 0 and unit price cannot be negative.",
         createFailed: "Failed to create the quotation.",
         createdSuccess: "Quotation {{number}} created successfully.",
+        realSettingsRequired:
+          "Real company settings are required before creating, downloading, sharing, or sending quotations. Retry the workspace load first.",
         queued:
           "No connection was available. The quotation was queued and will retry automatically when the network returns.",
       },
@@ -527,6 +529,8 @@ export const en = {
         saveSuccess: "Company settings updated successfully.",
         logoFailed: "Failed to update the company logo.",
         logoSuccess: "Company logo updated successfully.",
+        realSettingsRequired:
+          "Real company settings must be loaded before saving changes or uploading a logo.",
       },
     },
   },

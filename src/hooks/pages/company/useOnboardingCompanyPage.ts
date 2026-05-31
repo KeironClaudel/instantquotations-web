@@ -15,7 +15,7 @@ type FeedbackState = {
 export function useOnboardingCompanyPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { companySettings, refreshCompanySettings, isLoading } = useAuth();
+  const { companySettings, companySettingsSource, refreshCompanySettings, isLoading } = useAuth();
 
   const [displayName, setDisplayName] = useState(companySettings?.displayName ?? "");
   const [taxPercentage, setTaxPercentage] = useState(String(companySettings?.taxPercentage ?? 13));
@@ -133,7 +133,10 @@ export function useOnboardingCompanyPage() {
     setDisplayName,
     setTaxLabel,
     setTaxPercentage,
-    shouldRedirect: !isLoading && isCompanySetupComplete(companySettings),
+    shouldRedirect:
+      !isLoading &&
+      companySettingsSource === "remote" &&
+      isCompanySetupComplete(companySettings),
     taxLabel,
     taxPercentage,
   };
