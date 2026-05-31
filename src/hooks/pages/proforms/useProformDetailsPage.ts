@@ -100,8 +100,8 @@ export function useProformDetailsPage() {
         type: pdfBlob.type || "application/pdf",
       });
       const sharedAsFile = await shareFile(pdfFile, {
-        text: `Proform ${proform.number}`,
-        title: `Proform ${proform.number}`,
+        text: `Quotation ${proform.number}`,
+        title: `Quotation ${proform.number}`,
       });
 
       if (sharedAsFile) {
@@ -110,7 +110,7 @@ export function useProformDetailsPage() {
       }
 
       const response = await createProformShareLink(proform.id);
-      const shared = await shareUrl(`Proform ${proform.number}`, response.shareUrl);
+      const shared = await shareUrl(`Quotation ${proform.number}`, response.shareUrl);
 
       if (!shared) {
         setFeedback(createErrorFeedback(t("pages.proformDetails.feedback.nativeShareUnavailable")));
@@ -141,7 +141,7 @@ export function useProformDetailsPage() {
       const response = await sendProformByEmail({
         message: null,
         proformId: proform.id,
-        subject: `Proform ${proform.number}`,
+        subject: `Quotation ${proform.number}`,
         toEmail: proform.clientEmail,
       });
 

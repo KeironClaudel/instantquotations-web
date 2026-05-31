@@ -151,7 +151,7 @@ export function AppShell() {
 
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[0.95rem] font-extrabold tracking-[-0.02em] text-[var(--ip-text)] sm:text-base">
-                    {companySettings?.displayName ?? "InstantProforms"}
+                    {companySettings?.displayName ?? "InstantQuotations"}
                   </div>
 
                   <div className="mt-1 flex flex-wrap items-center gap-1.5 pb-1 sm:gap-2 lg:overflow-x-auto lg:flex-nowrap lg:whitespace-nowrap lg:[-ms-overflow-style:none] lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">

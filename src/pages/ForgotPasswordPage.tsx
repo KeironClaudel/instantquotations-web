@@ -14,7 +14,7 @@ export function ForgotPasswordPage() {
         <div className="app-auth-split">
           <section className="app-auth-hero">
             <div className="app-page-badge border-white/20 bg-white/10 text-white">
-              InstantProforms
+              InstantQuotations
             </div>
 
             <h1 className="app-auth-title mt-5">{t("pages.forgotPassword.title")}</h1>

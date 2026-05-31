@@ -31,7 +31,7 @@ export function LoginPage() {
         <div className="app-auth-split">
           <section className="app-auth-hero">
             <div className="app-page-badge border-white/20 bg-white/10 text-white">
-              InstantProforms
+              InstantQuotations
             </div>
 
             <h1 className="app-auth-title mt-5">{t("pages.login.title")}</h1>
@@ -41,9 +41,9 @@ export function LoginPage() {
               <div className="app-auth-visual-sheet">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="app-kicker text-white/68">Proform</div>
+                    <div className="app-kicker text-white/68">Quotation</div>
                     <div className="mt-2 text-xl font-extrabold tracking-[-0.03em] text-white">
-                      Instant Quote
+                      Instant Quotation
                     </div>
                   </div>
 

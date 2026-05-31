@@ -21,9 +21,9 @@ export default defineConfig({
         "pwa-512x512.png",
       ],
       manifest: {
-        name: "InstantProforms",
-        short_name: "InstantProforms",
-        description: "Create, send, and manage proforms from a secure installable workspace.",
+        name: "InstantQuotations",
+        short_name: "InstantQuotations",
+        description: "Create, send, and manage quotations from a secure installable workspace.",
         theme_color: "#0f172a",
         background_color: "#f8fafc",
         display: "standalone",
