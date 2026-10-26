@@ -18,29 +18,22 @@ export function ResetPasswordPage() {
   } = useResetPasswordPage();
 
   return (
-    <div className="app-auth-shell">
+    <div className="app-auth-shell password-auth-shell">
       <div className="app-auth-frame">
-        <div className="app-auth-split">
-          <section className="app-auth-hero">
-            <div className="app-page-badge border-white/20 bg-white/10 text-white">
-              InstantQuotations
-            </div>
-
-            <h1 className="app-auth-title mt-5">{t("pages.resetPassword.title")}</h1>
-            <p className="app-auth-copy">{t("pages.resetPassword.description")}</p>
-          </section>
-
+        <div className="password-auth-content">
           <section className="app-auth-card">
-          <div className="app-auth-utility">
-            <ThemeSwitcher compact />
-            <LanguageSwitcher compact />
+          <div className="password-auth-toolbar">
+            <div className="app-page-badge">{t("components.appShell.workspace")}</div>
+            <div className="password-auth-controls">
+              <LanguageSwitcher compact />
+              <ThemeSwitcher compact />
+            </div>
           </div>
 
           <div className="mb-6">
-            <div className="app-page-badge">{t("components.appShell.workspace")}</div>
-            <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
+            <h1 className="mt-4 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
               {t("pages.resetPassword.title")}
-            </h2>
+            </h1>
             <p className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
               {t("pages.resetPassword.description")}
             </p>

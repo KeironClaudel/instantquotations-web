@@ -1,10 +1,10 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { createClient, deleteClient, getClients, updateClient } from "@/lib/api/clientApi";
+import { deleteClient, getClients, updateClient } from "@/lib/api/clientApi";
 import { createErrorFeedback, createSuccessFeedback, type FeedbackState } from "@/lib/utils/feedback";
 import { getClientIdentificationTypeLabel } from "@/lib/utils/proformCurrency";
 import type { ClientIdentificationType, ClientRecord } from "@/types/client";
@@ -46,12 +46,18 @@ export function ClientsPage() {
   const { i18n, t } = useTranslation();
   const locale = i18n.resolvedLanguage?.startsWith("es") ? "es" : "en";
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchParamsKey = searchParams.toString();
+  const search = searchParams.get("search") ?? "";
+  function setSearch(value: string) {
+    setSearchParams(current => {
+      const next = new URLSearchParams(current);
+      if (value) next.set("search", value); else next.delete("search");
+      return next;
+    }, { replace: true, preventScrollReset: true });
+  }
 
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [form, setForm] = useState<ClientFormState>(emptyFormState);
-  const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -78,31 +84,6 @@ export function ClientsPage() {
       );
     });
   }, [clients, deferredSearch]);
-
-  useEffect(() => {
-    const searchFromParams = searchParams.get("search") ?? "";
-
-    if (searchFromParams !== search) {
-      setSearch(searchFromParams);
-    }
-  }, [searchParamsKey]);
-
-  useEffect(() => {
-    const nextParams = new URLSearchParams(searchParams);
-    const normalizedSearch = search.trim();
-
-    if (normalizedSearch) {
-      nextParams.set("search", normalizedSearch);
-    } else {
-      nextParams.delete("search");
-    }
-
-    if (nextParams.toString() === searchParamsKey) {
-      return;
-    }
-
-    setSearchParams(nextParams, { replace: true, preventScrollReset: true });
-  }, [search, searchParamsKey, setSearchParams]);
 
   useEffect(() => {
     async function loadClients() {
@@ -174,11 +155,6 @@ export function ClientsPage() {
         return;
       }
 
-      const createdClient = await createClient(payload);
-      setClients((current) => [...current, createdClient].sort((left, right) => left.name.localeCompare(right.name)));
-      setSelectedClientId(createdClient.id);
-      setForm(createFormState(createdClient));
-      setFeedback(createSuccessFeedback(t("pages.clients.feedback.createSuccess")));
     } catch {
       setFeedback(createErrorFeedback(t("pages.clients.feedback.saveFailed")));
     } finally {
@@ -208,7 +184,7 @@ export function ClientsPage() {
   }
 
   if (isLoading) {
-    return <PageLoader message={t("pages.clients.loading")} />;
+    return <PageLoader variant="clients" message={t("pages.clients.loading")} />;
   }
 
   return (
@@ -224,13 +200,9 @@ export function ClientsPage() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleNewClient}
-          className="app-button-primary"
-        >
-          {t("pages.clients.newClient")}
-        </button>
+        <Link to="/app/clients/new" className="app-button-primary">
+          <span aria-hidden="true">＋</span>{t("pages.clients.newClient")}
+        </Link>
       </div>
 
       {feedback ? (
@@ -245,12 +217,13 @@ export function ClientsPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+      <div className={`grid gap-6 ${selectedClient ? "xl:grid-cols-[0.95fr_1.05fr]" : ""}`}>
         <section className="app-card p-5 sm:p-6">
           <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("pages.clients.search")}</label>
+            <label htmlFor="client-search" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{t("pages.clients.search")}</label>
             <input
               className={inputClassName}
+              id="client-search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t("pages.clients.searchPlaceholder")}
@@ -305,7 +278,7 @@ export function ClientsPage() {
           )}
         </section>
 
-        <section className="app-card p-5 sm:p-6">
+        {selectedClient ? <section className="app-card p-5 sm:p-6">
           <div className="mb-5">
             <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {selectedClient ? t("pages.clients.editClient") : t("pages.clients.createClient")}
@@ -416,7 +389,7 @@ export function ClientsPage() {
               </button>
             ) : null}
           </div>
-        </section>
+        </section> : null}
       </div>
     </div>
   );

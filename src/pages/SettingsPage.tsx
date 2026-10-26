@@ -38,7 +38,7 @@ export function SettingsPage() {
   const emailDeliveryStatusHelp = t(`pages.settings.emailDeliveryStatus.${emailDeliveryStatus}.help`);
 
   if (isLoading) {
-    return <PageLoader message={t("pages.settings.loading")} />;
+    return <PageLoader variant="settings" message={t("pages.settings.loading")} />;
   }
 
   return (

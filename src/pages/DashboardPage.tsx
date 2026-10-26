@@ -1,159 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useDashboardPage } from "@/hooks/pages/dashboard/useDashboardPage";
-
-function QuickAction({
-  to,
-  title,
-  description,
-  variant = "default",
-}: {
-  to: string;
-  title: string;
-  description: string;
-  variant?: "default" | "highlight";
-}) {
-  const { t } = useTranslation();
-  const className =
-    variant === "highlight"
-      ? "app-card flex min-h-[184px] flex-col justify-between p-5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(23,59,122,0.18)] sm:p-6"
-      : "app-card-soft flex min-h-[184px] flex-col justify-between p-5 transition hover:-translate-y-0.5 hover:bg-white/80 sm:p-6";
-
-  return (
-    <Link to={to} className={className}>
-      <div>
-        <div className="app-kicker">
-          {variant === "highlight" ? "PWA" : t("components.appShell.workspace")}
-        </div>
-        <div className="mt-6 text-lg font-extrabold tracking-[-0.02em] text-[var(--ip-text)]">
-          {title}
-        </div>
-        <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
-          {description}
-        </div>
-      </div>
-
-      <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--ip-primary)]">
-        <span>{title}</span>
-        <span aria-hidden="true">→</span>
-      </div>
-    </Link>
-  );
-}
+import { getProforms } from "@/lib/api/proformHistoryApi";
+import { getClients } from "@/lib/api/clientApi";
+import { getProformStatusBadgeClassName, getProformStatusLabel } from "@/lib/utils/proformStatus";
+import { Skeleton, SkeletonRows } from "@/components/ui/Skeleton";
+import { Icon } from "@/components/ui/Icon";
+import type { ProformListItem } from "@/types/proformHistory";
 
 export function DashboardPage() {
-  const { t } = useTranslation();
-  const { companyName, isSetupComplete, userFirstName } = useDashboardPage();
-
-  return (
-    <div className="space-y-7">
-      <section className="app-card-hero p-6 sm:p-7">
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.9fr)] xl:items-start">
-          <div>
-            <div className="app-page-badge">{t("pages.dashboard.badge")}</div>
-
-            <h1 className="app-page-title mt-4">
-              {t("pages.dashboard.welcome", { name: userFirstName })}
-            </h1>
-
-            <p className="app-page-copy">{t("pages.dashboard.description")}</p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/app/proforms/new" className="app-button-primary">
-                {t("pages.dashboard.createNewProform")}
-              </Link>
-              <Link to="/app/proforms" className="app-button-secondary">
-                {t("pages.dashboard.showPreviousProforms")}
-              </Link>
-            </div>
-
-            <div className="mt-7 grid gap-3 md:grid-cols-3">
-              <div className="app-stat">
-                <div className="app-stat-label">{t("components.appShell.workspace")}</div>
-                <div className="app-stat-value break-words text-[1.08rem]">{companyName}</div>
-              </div>
-
-              <div className="app-stat">
-                <div className="app-stat-label">{t("common.labels.status")}</div>
-                <div className="mt-3">
-                  <span className={isSetupComplete ? "app-chip app-chip-success" : "app-chip app-chip-warning"}>
-                    {isSetupComplete
-                      ? t("components.appShell.setupComplete")
-                      : t("components.appShell.setupNeedsAttention")}
-                  </span>
-                </div>
-              </div>
-
-              <div className="app-stat bg-[linear-gradient(135deg,var(--ip-primary-soft),transparent)]">
-                <div className="app-stat-label">PWA</div>
-                <div className="app-stat-value text-[1.08rem]">
-                  {t("pages.dashboard.quickActions")}
-                </div>
-                <div className="mt-2 text-sm leading-6 text-[var(--ip-text-soft)]">
-                  {t("pages.dashboard.quickActionsDescription")}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-[var(--ip-text-soft)]">
-              <span className="app-chip">{companyName}</span>
-              <span className="app-chip">{t("pages.dashboard.quickActions")}</span>
-            </div>
-          </div>
-
-          <div className="app-card-inset p-5 sm:p-6">
-            <div className="app-kicker">{t("components.appShell.workspace")}</div>
-            <div className="mt-3 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
-              {companyName}
-            </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
-              {t("pages.dashboard.quickActionsDescription")}
-            </p>
-
-            <div className="mt-5 space-y-3">
-              <div className="app-card-soft p-4">
-                <div className="app-kicker">{t("pages.dashboard.createNewProform")}</div>
-                <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
-                  {t("pages.dashboard.createNewProformDescription")}
-                </div>
-              </div>
-
-              <div className="app-card-soft p-4">
-                <div className="app-kicker">{t("pages.dashboard.showPreviousProforms")}</div>
-                <div className="mt-2 text-sm leading-7 text-[var(--ip-text-soft)]">
-                  {t("pages.dashboard.showPreviousProformsDescription")}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="app-card p-6 sm:p-7">
-        <div className="mb-5">
-          <h2 className="app-section-heading">
-            {t("pages.dashboard.quickActions")}
-          </h2>
-          <p className="app-section-copy">
-            {t("pages.dashboard.quickActionsDescription")}
-          </p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <QuickAction
-            to="/app/proforms/new"
-            title={t("pages.dashboard.createNewProform")}
-            description={t("pages.dashboard.createNewProformDescription")}
-            variant="highlight"
-          />
-
-          <QuickAction
-            to="/app/proforms"
-            title={t("pages.dashboard.showPreviousProforms")}
-            description={t("pages.dashboard.showPreviousProformsDescription")}
-          />
-        </div>
-      </section>
-    </div>
-  );
+  const { t, i18n } = useTranslation();
+  const es = i18n.resolvedLanguage?.startsWith("es");
+  const [data, setData] = useState<{ recent: ProformListItem[]; total?: number; drafts?: number; clients?: number } | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let active = true;
+    Promise.all([getProforms({ page: 1, pageSize: 5 }), getProforms({ page: 1, pageSize: 1, status: "Draft" }), getClients()])
+      .then(([recent, drafts, clients]) => { if (active) setData({ recent: recent.items, total: recent.totalCount, drafts: drafts.totalCount, clients: clients.length }); })
+      .catch(() => { if (active) setFailed(true); });
+    return () => { active = false; };
+  }, []);
+  const stats = [
+    { label: es ? "Total de cotizaciones" : "Total quotations", value: data?.total, icon: "document" as const, to: "/app/proforms" },
+    { label: t("common.statuses.draft"), value: data?.drafts, icon: "clock" as const, to: "/app/proforms?status=Draft" },
+    { label: t("components.appShell.clients"), value: data?.clients, icon: "clients" as const, to: "/app/clients" },
+  ];
+  return <div className="dashboard-page">
+    <div className="dashboard-heading"><div><h1 className="app-page-title">Dashboard</h1><p className="app-page-copy">{es ? "Resumen de tu negocio" : "Your business at a glance"}</p></div><Link to="/app/proforms/new" className="app-button-primary"><Icon name="plus" />{t("components.appShell.newProform")}</Link></div>
+    <div className="dashboard-stats" aria-busy={!data && !failed}>{stats.map(stat => <Link key={stat.to} to={stat.to} className="dashboard-stat app-card"><span className="stat-icon"><Icon name={stat.icon} /></span><div>{!data && !failed ? <Skeleton width={48} height={33} /> : <strong>{stat.value ?? "—"}</strong>}<span>{stat.label}</span></div><Icon name="arrow" /></Link>)}</div>
+    <section className="app-card recent-card"><div className="recent-heading"><h2 className="app-section-heading">{es ? "Cotizaciones recientes" : "Recent quotations"}</h2><Link to="/app/proforms">{es ? "Ver todas" : "View all"}<Icon name="arrow" /></Link></div>
+      {failed ? <p className="app-feedback-error" role="alert">{es ? "No se pudo cargar el resumen. Revisa las cotizaciones o vuelve a intentarlo recargando la página." : "Unable to load the overview. Open quotations or reload to try again."}</p> : !data ? <div><span className="sr-only" role="status">{t("components.pageLoader.loading")}</span><SkeletonRows count={5} /></div> : data.recent.length === 0 ? <div className="dashboard-empty"><Icon name="document" /><p>{es ? "Tus cotizaciones aparecerán aquí." : "Your quotations will appear here."}</p><Link className="app-button-secondary" to="/app/proforms/new">{t("components.appShell.newProform")}</Link></div> : data.recent.map(item => <Link className="recent-row" key={item.id} to={`/app/proforms/${item.id}`}><div><strong>{item.clientName}</strong><p>{item.number} · {new Intl.DateTimeFormat(i18n.resolvedLanguage, { dateStyle: "medium" }).format(new Date(item.issuedAtUtc))}</p></div><span className={`status-pill ${getProformStatusBadgeClassName(item.status)}`}><i />{getProformStatusLabel(item.status, t)}</span><Icon name="arrow" /></Link>)}
+    </section>
+  </div>;
 }

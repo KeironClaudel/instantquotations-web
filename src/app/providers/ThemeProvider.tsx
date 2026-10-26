@@ -5,7 +5,7 @@ const themeStorageKey = "instantproforms-theme";
 
 function resolveInitialTheme(): ThemeMode {
   if (typeof window === "undefined") {
-    return "light";
+    return "dark";
   }
 
   const storedTheme = window.localStorage.getItem(themeStorageKey);
@@ -14,7 +14,7 @@ function resolveInitialTheme(): ThemeMode {
     return storedTheme;
   }
 
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "dark";
 }
 
 function applyTheme(theme: ThemeMode) {

@@ -15,6 +15,16 @@ export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
     i18n.resolvedLanguage?.startsWith(option.code) ?? i18n.language.startsWith(option.code),
   );
 
+  if (compact) {
+    return <label className="language-compact">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18M5 7h14M5 17h14" /></svg>
+      <select aria-label={t("components.languageSwitcher.spanish") + " / " + t("components.languageSwitcher.english")} value={languageOptions[Math.max(activeIndex, 0)]?.code ?? "es"} onChange={event => void i18n.changeLanguage(event.target.value)}>
+        {languageOptions.map(option => <option key={option.code} value={option.code}>{option.shortLabel}</option>)}
+      </select>
+      <svg className="language-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m4 6 4 4 4-4" /></svg>
+    </label>;
+  }
+
   return (
     <div
       className={[

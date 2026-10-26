@@ -41,7 +41,7 @@ export function ThemeSwitcher({
       type="button"
       onClick={toggleTheme}
       className={[
-        "inline-flex shrink-0 items-center gap-2 rounded-2xl border p-1 transition-all duration-300 ease-out backdrop-blur",
+        compact && !showLabelWhenCompact ? "theme-compact" : "inline-flex shrink-0 items-center gap-2 rounded-2xl border p-1 transition-all duration-300 ease-out backdrop-blur",
         "border-[var(--ip-border)] bg-[var(--ip-surface-strong)] text-[var(--ip-text)] hover:bg-[var(--ip-primary-soft)]",
         compact ? "justify-center px-2.5 py-1.5" : "px-3 py-2",
       ].join(" ")}

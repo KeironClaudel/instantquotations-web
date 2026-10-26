@@ -3,10 +3,13 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLoginPage } from "@/hooks/pages/auth/useLoginPage";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { Icon } from "@/components/ui/Icon";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 export function LoginPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const es = i18n.resolvedLanguage?.startsWith("es");
+  const [showWelcome, setShowWelcome] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     email,
@@ -26,66 +29,28 @@ export function LoginPage() {
   }
 
   return (
-    <div className="app-auth-shell">
+    <div className={`app-auth-shell login-shell ${showWelcome ? "show-welcome" : ""}`}>
       <div className="app-auth-frame">
+        <header className="auth-header"><Link to="/login" className="brand-lockup"><span className="brand-mark"><Icon name="document" /></span><span>InstantQuotations</span></Link><div className="flex items-center gap-2"><LanguageSwitcher compact /><ThemeSwitcher compact /></div></header>
         <div className="app-auth-split">
           <section className="app-auth-hero">
             <div className="app-page-badge border-white/20 bg-white/10 text-white">
               InstantQuotations
             </div>
 
-            <h1 className="app-auth-title mt-5">{t("pages.login.title")}</h1>
-            <p className="app-auth-copy">{t("pages.login.description")}</p>
+            <h1 className="app-auth-title mt-5">{es ? "Crea y gestiona cotizaciones de forma" : "Create and manage quotations"} <span className="hero-highlight">{es ? "rápida y profesional" : "quickly and professionally"}</span></h1>
+            <p className="app-auth-copy">{es ? "Todo lo que necesitas para tus clientes, productos y cotizaciones, en un solo lugar." : "Everything you need for your clients, products and quotations, in one place."}</p>
 
-            <div className="app-auth-visual hidden min-[900px]:flex" aria-hidden="true">
-              <div className="app-auth-visual-sheet">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="app-kicker text-white/68">Quotation</div>
-                    <div className="mt-2 text-xl font-extrabold tracking-[-0.03em] text-white">
-                      Instant Quotation
-                    </div>
-                  </div>
-
-                  <div className="app-auth-visual-badge">PDF</div>
-                </div>
-
-                <div className="app-auth-visual-lines">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-
-                <div className="app-auth-visual-row">
-                  <span>Client</span>
-                  <strong>John Doe</strong>
-                </div>
-
-                <div className="app-auth-visual-row">
-                  <span>Status</span>
-                  <strong>Ready to Send</strong>
-                </div>
-
-                <div className="app-auth-visual-row">
-                  <span>Total</span>
-                  <strong className="app-auth-visual-amount">$1,250.00</strong>
-                </div>
-              </div>
-
-              <div className="app-auth-visual-orb" />
-              <div className="app-auth-visual-dot" />
-              <div className="app-auth-visual-dot-delayed" />
+            <div className="hero-benefits">
+              {[ ["clock", es ? "Cotizaciones más rápidas" : "Faster quotations", es ? "Crea y envía cotizaciones en minutos." : "Create and send quotations in minutes."], ["clients", es ? "Gestión de clientes" : "Client management", es ? "Mantén toda tu información organizada." : "Keep all your information organized."], ["document", es ? "Todo en un solo lugar" : "Everything in one place", es ? "Tu negocio, más eficiente." : "A more efficient business."] ].map(([icon, title, copy]) => <div className="hero-benefit" key={title}><span className="brand-mark"><Icon name={icon as "clock" | "clients" | "document"} /></span><div><h3>{title}</h3><p>{copy}</p></div></div>)}
             </div>
+            <div className="product-preview" aria-hidden="true"><div className="preview-brand"><Icon name="document" /> InstantQuotations</div><div className="preview-layout"><div className="preview-sidebar"><span>▦ Dashboard</span><span>＋ {t("components.appShell.newProform")}</span><span>▤ {t("components.appShell.proforms")}</span><span>♧ {t("components.appShell.clients")}</span></div><div className="preview-content"><h3>Dashboard</h3><p>{es ? "Resumen de tu negocio" : "Your business at a glance"}</p><div className="preview-stats"><div><Icon name="document" /><strong>24</strong><small>{t("components.appShell.proforms")}</small></div><div><Icon name="clients" /><strong>16</strong><small>{t("components.appShell.clients")}</small></div></div><h4>{es ? "Cotizaciones recientes" : "Recent quotations"}</h4>{["John Doe", "María López", "Constructora R."].map(name => <div className="preview-row" key={name}><span>{name[0]}</span>{name}<i /></div>)}</div></div></div>
+            <button className="app-button-primary welcome-start" type="button" onClick={() => setShowWelcome(false)}>{es ? "Comenzar" : "Get started"} →</button>
           </section>
 
           <section className="app-auth-card">
-            <div className="app-auth-utility">
-              <ThemeSwitcher compact />
-              <LanguageSwitcher compact />
-            </div>
-
             <div className="mb-6">
-              <div className="app-page-badge">{t("components.appShell.workspace")}</div>
+              <div className="app-page-badge login-badge">{es ? "Bienvenido" : "Welcome"}</div>
               <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.03em] text-[var(--ip-text)]">
                 {t("pages.login.title")}
               </h2>
@@ -103,6 +68,7 @@ export function LoginPage() {
                   id="email"
                   type="email"
                   className="app-input"
+                  placeholder={es ? "tu@correo.com" : "you@example.com"}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   autoComplete="email"
@@ -119,6 +85,7 @@ export function LoginPage() {
                     id="password"
                     type={isPasswordVisible ? "text" : "password"}
                     className="app-input pr-11"
+                    placeholder={es ? "Ingresa tu contraseña" : "Enter your password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     autoComplete="current-password"
@@ -174,7 +141,7 @@ export function LoginPage() {
                 </div>
               </div>
 
-              <label className="app-card-soft flex items-center gap-3 px-4 py-3 text-sm text-[var(--ip-text-soft)]">
+              <label className="flex items-center gap-3 py-3 text-sm text-[var(--ip-text-soft)]">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -191,13 +158,14 @@ export function LoginPage() {
                 disabled={isSubmitting}
                 className="app-button-primary w-full"
               >
-                {isSubmitting ? t("pages.login.signingIn") : t("pages.login.signIn")}
+                {isSubmitting ? t("pages.login.signingIn") : t("pages.login.signIn")} <span aria-hidden="true">→</span>
               </button>
 
               <div className="mt-2 text-center text-sm text-[var(--ip-text-soft)]">
                 {t("pages.login.accessManagedByAdmin")}
               </div>
             </form>
+            <button type="button" className="welcome-link" onClick={() => setShowWelcome(true)}>{es ? "Conoce InstantQuotations" : "Discover InstantQuotations"} →</button>
           </section>
         </div>
       </div>

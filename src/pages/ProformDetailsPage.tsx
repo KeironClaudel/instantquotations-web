@@ -1,36 +1,46 @@
+import { useState, type KeyboardEvent } from "react";
+import { Icon } from "@/components/ui/Icon";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLoader } from "@/components/ui/PageLoader";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { formatMoneyAmount } from "@/lib/utils/numberFormat";
 import { getClientIdentificationTypeLabel } from "@/lib/utils/proformCurrency";
 import { getProformStatusBadgeClassName, getProformStatusLabel } from "@/lib/utils/proformStatus";
 import { useProformDetailsPage } from "@/hooks/pages/proforms/useProformDetailsPage";
 
-function DetailTextSection({
-  title,
-  value,
-}: {
-  title: string;
-  value: string | null | undefined;
-}) {
-  if (!value) {
-    return null;
-  }
+type DetailTab = "information" | "products" | "service" | "conditions";
 
-  return (
-    <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-      <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">{title}</div>
-      <div className="mt-2 whitespace-pre-wrap text-sm leading-7 text-slate-700 dark:text-slate-300">
-        {value}
-      </div>
-    </div>
-  );
+function TextCard({ title, value }: { title: string; value: string | null | undefined }) {
+  const { t } = useTranslation();
+  return <section className="quote-card app-card">
+    <h2 className="quote-card-title"><span className="quote-card-icon"><Icon name="document" /></span>{title}</h2>
+    <div className="quote-prose">{value || t("common.defaults.notProvided")}</div>
+  </section>;
 }
 
 export function ProformDetailsPage() {
   const { i18n, t } = useTranslation();
+  const es = i18n.resolvedLanguage?.startsWith("es");
+  const [activeTab, setActiveTab] = useState<DetailTab>("information");
+  const tabs: { id: DetailTab; label: string }[] = [
+    { id: "information", label: es ? "Información" : "Information" },
+    { id: "products", label: es ? "Productos" : "Products" },
+    { id: "service", label: es ? "Servicio" : "Service" },
+    { id: "conditions", label: es ? "Condiciones" : "Conditions" },
+  ];
+  function navigateTabs(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const next = event.key === "ArrowRight" ? (index + 1) % tabs.length
+      : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length
+      : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
+    if (next === null) return;
+    event.preventDefault();
+    const tab = tabs[next];
+    if (tab) {
+      setActiveTab(tab.id);
+      document.getElementById(`quote-tab-${tab.id}`)?.focus();
+    }
+  }
   const {
     companySettings,
     currencySymbol,
@@ -52,7 +62,7 @@ export function ProformDetailsPage() {
   } = useProformDetailsPage();
 
   if (isLoading) {
-    return <PageLoader message={t("pages.proformDetails.loading")} />;
+    return <PageLoader variant="details" message={t("pages.proformDetails.loading")} />;
   }
 
   if (!proform) {
@@ -72,136 +82,76 @@ export function ProformDetailsPage() {
     );
   }
 
+  const badge = <span className={`quote-status ${getProformStatusBadgeClassName(proform.status)}`}>{getProformStatusLabel(proform.status, t)}</span>;
+
   return (
-    <div className="mx-auto max-w-6xl px-1 sm:px-0">
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="app-page-head mb-0">
-          <div className="app-page-badge">{t("pages.proformsList.title")}</div>
-          <div className="mt-3">
-            <SectionHeader
-              title={proform.number}
-              description={t("pages.proformDetails.createdOn", {
-                clientName: proform.clientName,
-                date: issuedAtLabel,
-              })}
-            />
-          </div>
+    <div className="quote-detail">
+      <header className="quote-heading">
+        <Link to="/app/proforms" className="quote-back" aria-label={t("common.actions.back")}>←</Link>
+        <div><div className="quote-heading-title"><h1>{proform.number}</h1>{badge}</div>
+          <p>{t("pages.proformDetails.createdOn", { clientName: proform.clientName, date: issuedAtLabel })}</p>
         </div>
-
-        <div className="flex flex-wrap gap-3">
-          <Link
-            to="/app/proforms"
-            className="app-button-secondary"
-          >
-            {t("common.actions.back")}
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => void handleDownloadPdf()}
-            disabled={isDownloading}
-            className="app-button-primary"
-          >
-            {isDownloading ? t("pages.proformDetails.downloading") : t("pages.proformDetails.downloadPdf")}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => void handleShare()}
-            disabled={isSharing}
-            className="app-button-secondary"
-          >
-            {isSharing ? t("pages.proformDetails.sharing") : t("pages.proformDetails.share")}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => void handleSendToClientEmail()}
-            disabled={isSendingToClientEmail || !proform.clientEmail}
-            className="app-button-secondary"
-          >
-            {isSendingToClientEmail ? t("pages.proformDetails.sending") : t("pages.proformDetails.sendToClientEmail")}
-          </button>
-        </div>
+      </header>
+      <div className="quote-actions">
+        <button type="button" onClick={() => void handleDownloadPdf()} disabled={isDownloading} aria-label={t("pages.proformDetails.downloadPdf")}><Icon name="document" /><span>{isDownloading ? t("pages.proformDetails.downloading") : "PDF"}</span></button>
+        <button type="button" onClick={() => void handleShare()} disabled={isSharing}><Icon name="share" /><span>{isSharing ? t("pages.proformDetails.sharing") : t("pages.proformDetails.share")}</span></button>
+        <button type="button" onClick={() => void handleSendToClientEmail()} disabled={isSendingToClientEmail || !proform.clientEmail} title={!proform.clientEmail ? t("pages.proformDetails.feedback.missingClientEmail") : undefined}><Icon name="send" /><span>{isSendingToClientEmail ? t("pages.proformDetails.sending") : es ? "Enviar al cliente" : "Send to client"}</span></button>
       </div>
-
-      {feedback ? (
-        <div
-          className={`mb-6 rounded-2xl px-4 py-3.5 text-sm shadow-sm ${
-            feedback.type === "success"
-              ? "app-feedback-success"
-              : "app-feedback-error"
-          }`}
-        >
-          {feedback.message}
-        </div>
-      ) : null}
-
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="space-y-6">
-          <section className="app-card p-5 sm:p-6">
-            <h2 className="mb-5 app-section-heading">
-              {t("pages.proformDetails.clientInformation")}
-            </h2>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-                <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">{t("common.labels.client")}</div>
-                <div className="mt-1 font-semibold text-slate-900 dark:text-slate-100">{proform.clientName}</div>
+      {feedback ? <div role="status" className={feedback.type === "success" ? "app-feedback-success mb-4" : "app-feedback-error mb-4"}>{feedback.message}</div> : null}
+      <div className="quote-tabs" role="tablist" aria-label={es ? "Detalle de cotización" : "Quotation details"}>
+        {tabs.map((tab, index) => <button key={tab.id} id={`quote-tab-${tab.id}`} type="button" role="tab" aria-selected={activeTab === tab.id} aria-controls={`quote-panel-${tab.id}`} tabIndex={activeTab === tab.id ? 0 : -1} onClick={() => setActiveTab(tab.id)} onKeyDown={event => navigateTabs(event, index)}>{tab.label}</button>)}
+      </div>
+      <div id="quote-panel-information" role="tabpanel" aria-labelledby="quote-tab-information" hidden={activeTab !== "information"} tabIndex={0}>
+        <div className="quote-overview">
+          <section className="quote-card app-card quote-client">
+            <h2 className="quote-card-title"><span className="quote-card-icon"><Icon name="clients" /></span>{t("pages.proformDetails.clientInformation")}</h2>
+            <dl className="quote-client-fields">
+              <div><dt>{t("common.labels.client")}</dt><dd>{proform.clientName}</dd></div>
+              <div><dt>{t("common.labels.status")}</dt><dd>{badge}</dd></div>
+              <div><dt>{t("common.labels.email")}</dt><dd>{proform.clientEmail || t("common.defaults.notProvided")}</dd></div>
+              <div><dt>{t("common.labels.phone")}</dt><dd>{proform.clientPhone || t("common.defaults.notProvided")}</dd></div>
+              <div><dt>{t("pages.proformDetails.identification")}</dt><dd>{proform.clientIdentificationNumber ? `${getClientIdentificationTypeLabel(proform.clientIdentificationType, es ? "es" : "en")} · ${proform.clientIdentificationNumber}` : t("common.defaults.notProvided")}</dd></div>
+              <div><dt>{t("pages.proformDetails.location")}</dt><dd>{proform.location || proform.notes || t("common.defaults.notProvided")}</dd></div>
+            </dl>
+          </section>
+          <section className="quote-card app-card quote-financial">
+            <h2 className="quote-card-title"><span className="quote-card-icon"><Icon name="wallet" /></span>{t("pages.proformDetails.financialSummary")}</h2>
+            <div className="app-card-inset space-y-3 p-4 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-600 dark:text-slate-400">{t("common.finance.subtotal")}</span>
+                <span className="font-medium text-slate-900 dark:text-slate-100">
+                  {currencySymbol}
+                  {formatMoneyAmount(proform.subtotal)}
+                </span>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-                <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">{t("common.labels.status")}</div>
-                <div className="mt-2">
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getProformStatusBadgeClassName(proform.status)}`}
-                  >
-                    {getProformStatusLabel(proform.status, t)}
-                  </span>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-600 dark:text-slate-400">
+                  {companySettings?.taxLabel ?? t("common.defaults.taxLabel")} ({proform.taxPercentage}%)
+                </span>
+                <span className="font-medium text-slate-900 dark:text-slate-100">
+                  {currencySymbol}
+                  {formatMoneyAmount(proform.taxAmount)}
+                </span>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-                <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">{t("common.labels.email")}</div>
-                <div className="mt-1 font-semibold text-slate-900 dark:text-slate-100">
-                  {proform.clientEmail || t("common.defaults.notProvided")}
-                </div>
+              <div className="flex items-center justify-between border-t border-slate-300 pt-4 text-lg font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">
+                <span>{t("common.finance.total")}</span>
+                <span>
+                  {currencySymbol}
+                  {formatMoneyAmount(proform.total)}
+                </span>
               </div>
-
-              <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-                <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">{t("common.labels.phone")}</div>
-                <div className="mt-1 font-semibold text-slate-900 dark:text-slate-100">
-                      {proform.clientPhone || t("common.defaults.notProvided")}
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-950">
-                <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                  {t("pages.proformDetails.identification")}
-                </div>
-                <div className="mt-1 font-semibold text-slate-900 dark:text-slate-100">
-                  {proform.clientIdentificationNumber
-                    ? `${getClientIdentificationTypeLabel(proform.clientIdentificationType, i18n.resolvedLanguage?.startsWith("es") ? "es" : "en")} · ${proform.clientIdentificationNumber}`
-                    : t("common.defaults.notProvided")}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-4">
-              <DetailTextSection title={t("pages.proformDetails.location")} value={proform.location || proform.notes} />
-              <DetailTextSection title={t("pages.proformDetails.internalNotes")} value={proform.internalNotes} />
             </div>
           </section>
-
-          <section className="app-card p-5 sm:p-6">
-            <h2 className="mb-5 app-section-heading">
-              {t("pages.proformDetails.updateStatus")}
-            </h2>
-
+          <div className="quote-notes"><TextCard title={t("pages.proformDetails.internalNotes")} value={proform.internalNotes} /></div>
+          <details className="app-card detail-disclosure quote-status-editor">
+            <summary className="filters-toggle"><span>{t("pages.proformDetails.updateStatus")}</span><span className="filters-chevron" aria-hidden="true">⌄</span></summary>
+            <div className="p-5">
             <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
               <div>
-                <label className="app-label">{t("common.labels.status")}</label>
-                <select
+                <label htmlFor="quotation-status" className="app-label">{t("common.labels.status")}</label>
+                <select id="quotation-status"
                   className="app-input"
                   value={selectedStatus}
                   onChange={(event) => setSelectedStatus(event.target.value)}
@@ -224,26 +174,13 @@ export function ProformDetailsPage() {
                 {isUpdatingStatus ? t("pages.proformDetails.saving") : t("pages.proformDetails.saveStatus")}
               </button>
             </div>
-          </section>
-
-          <section className="app-card p-5 sm:p-6">
-            <h2 className="mb-5 app-section-heading">
-              {t("pages.proformDetails.documentSections")}
-            </h2>
-
-            <div className="grid gap-4">
-              <DetailTextSection title={t("pages.newProform.serviceDescription")} value={proform.serviceDescription} />
-              <DetailTextSection title={t("pages.newProform.scopeOfWork")} value={proform.scopeOfWork} />
-              <DetailTextSection title={t("pages.newProform.serviceConditions")} value={proform.serviceConditions} />
-              <DetailTextSection title={t("pages.newProform.paymentConditions")} value={proform.paymentConditions} />
             </div>
-          </section>
-
-          <section className="app-card p-5 sm:p-6">
-            <h2 className="mb-5 app-section-heading">
-              {t("pages.proformDetails.items")}
-            </h2>
-
+          </details>
+        </div>
+      </div>
+      <div id="quote-panel-products" role="tabpanel" aria-labelledby="quote-tab-products" hidden={activeTab !== "products"} tabIndex={0}>
+        <section className="quote-card app-card">
+          <h2 className="quote-card-title"><span className="quote-card-icon"><Icon name="document" /></span>{t("pages.proformDetails.items")} <span className="quote-item-count">{proform.items.length}</span></h2>
             <div className="space-y-3">
               {proform.items
                 .slice()
@@ -293,44 +230,13 @@ export function ProformDetailsPage() {
                   </div>
                 ))}
             </div>
-          </section>
-        </div>
-
-        <div className="space-y-6">
-          <section className="app-card p-5 sm:p-6">
-            <h2 className="mb-5 app-section-heading">
-              {t("pages.proformDetails.financialSummary")}
-            </h2>
-
-            <div className="app-card-inset space-y-3 p-4 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-600 dark:text-slate-400">{t("common.finance.subtotal")}</span>
-                <span className="font-medium text-slate-900 dark:text-slate-100">
-                  {currencySymbol}
-                  {formatMoneyAmount(proform.subtotal)}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-600 dark:text-slate-400">
-                  {companySettings?.taxLabel ?? t("common.defaults.taxLabel")} ({proform.taxPercentage}%)
-                </span>
-                <span className="font-medium text-slate-900 dark:text-slate-100">
-                  {currencySymbol}
-                  {formatMoneyAmount(proform.taxAmount)}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between border-t border-slate-300 pt-4 text-lg font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">
-                <span>{t("common.finance.total")}</span>
-                <span>
-                  {currencySymbol}
-                  {formatMoneyAmount(proform.total)}
-                </span>
-              </div>
-            </div>
-          </section>
-        </div>
+        </section>
+      </div>
+      <div id="quote-panel-service" role="tabpanel" aria-labelledby="quote-tab-service" hidden={activeTab !== "service"} tabIndex={0}>
+        <div className="quote-text-grid"><TextCard title={t("pages.newProform.serviceDescription")} value={proform.serviceDescription} /><TextCard title={t("pages.newProform.scopeOfWork")} value={proform.scopeOfWork} /></div>
+      </div>
+      <div id="quote-panel-conditions" role="tabpanel" aria-labelledby="quote-tab-conditions" hidden={activeTab !== "conditions"} tabIndex={0}>
+        <div className="quote-text-grid"><TextCard title={t("pages.newProform.serviceConditions")} value={proform.serviceConditions} /><TextCard title={t("pages.newProform.paymentConditions")} value={proform.paymentConditions} /></div>
       </div>
     </div>
   );

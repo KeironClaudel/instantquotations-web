@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/Skeleton";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -21,28 +22,16 @@ function formatPercent(value: number | null | undefined): string {
 }
 
 function ProformsListSkeleton() {
-  return (
-    <div className="space-y-4" aria-hidden="true">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <section key={index} className="app-card animate-pulse p-5 sm:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="min-w-0 flex-1 space-y-3">
-              <div className="h-3 w-28 rounded-full bg-slate-200 dark:bg-slate-800" />
-              <div className="h-6 w-40 rounded-full bg-slate-200 dark:bg-slate-800" />
-              <div className="h-4 w-52 rounded-full bg-slate-200 dark:bg-slate-800" />
-              <div className="h-4 w-60 rounded-full bg-slate-200 dark:bg-slate-800" />
-            </div>
-
-            <div className="app-card-inset min-w-[220px] space-y-3 p-4">
-              <div className="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
-              <div className="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
-              <div className="h-5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
-            </div>
-          </div>
-        </section>
-      ))}
+  const { t } = useTranslation();
+  return <div className="space-y-4">
+    <span className="sr-only" role="status">{t("pages.proformsList.loading")}</span>
+    <div className="skeleton-quotation-list" aria-hidden="true" aria-busy="true">
+      {[0, 1, 2, 3, 4].map(key => <div key={key} className="app-card skeleton-quotation-row">
+        <div className="skeleton-stack"><Skeleton width="70%" height={20} /><Skeleton width="90%" height={12} /><Skeleton width="55%" height={12} /></div>
+        <Skeleton width={95} height={24} />
+      </div>)}
     </div>
-  );
+  </div>;
 }
 
 export function ProformsListPage() {
@@ -50,7 +39,6 @@ export function ProformsListPage() {
   const {
     clearFilters,
     clientFilter,
-    currentPage,
     companySettings,
     endItem,
     feedback,
@@ -79,7 +67,6 @@ export function ProformsListPage() {
     toDateFilter,
     todayDateValue,
     totalCount,
-    totalPages,
   } = useProformsListPage();
 
   return (
@@ -102,8 +89,14 @@ export function ProformsListPage() {
         </div>
       </div>
 
-      <section className="app-card mb-6 p-5 sm:p-6">
-        <div className="flex flex-col gap-4">
+      <details className="app-card quotation-filters mb-6">
+        <summary className="filters-toggle">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <span>{t("pages.proformsList.filterTitle")}</span>
+          {hasActiveFilters ? <span className="filters-active-dot" aria-label={i18n.resolvedLanguage?.startsWith("es") ? "Filtros activos" : "Active filters"} /> : null}
+          <span className="filters-chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div className="flex flex-col gap-4 p-5 sm:p-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="app-section-heading">{t("pages.proformsList.filterTitle")}</h2>
@@ -122,10 +115,11 @@ export function ProformsListPage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="xl:col-span-2">
-              <label className="app-label">{t("pages.proformsList.clientName")}</label>
+              <label htmlFor="filter-client" className="app-label">{t("pages.proformsList.clientName")}</label>
               <input
                 type="text"
-                value={clientFilter}
+                id="filter-client"
+                  value={clientFilter}
                 onChange={(event) => setClientFilter(event.target.value)}
                 placeholder={t("pages.proformsList.searchByClient")}
                 className="app-input"
@@ -133,9 +127,10 @@ export function ProformsListPage() {
             </div>
 
             <div>
-              <label className="app-label">{t("common.labels.status")}</label>
+              <label htmlFor="filter-status" className="app-label">{t("common.labels.status")}</label>
               <select
-                value={statusFilter}
+                id="filter-status"
+                  value={statusFilter}
                 onChange={(event) =>
                   setStatusFilter(event.target.value as (typeof statusOptions)[number])
                 }
@@ -151,9 +146,10 @@ export function ProformsListPage() {
 
             <div className="grid gap-4 sm:grid-cols-2 xl:col-span-1 xl:grid-cols-2">
               <div>
-                <label className="app-label">{t("pages.proformsList.from")}</label>
+                <label htmlFor="filter-from" className="app-label">{t("pages.proformsList.from")}</label>
                 <input
                   type="date"
+                  id="filter-from"
                   value={fromDateFilter}
                   max={toDateFilter || undefined}
                   onChange={(event) => setFromDateFilter(event.target.value)}
@@ -162,9 +158,10 @@ export function ProformsListPage() {
               </div>
 
               <div>
-                <label className="app-label">{t("pages.proformsList.to")}</label>
+                <label htmlFor="filter-to" className="app-label">{t("pages.proformsList.to")}</label>
                 <input
                   type="date"
+                  id="filter-to"
                   value={toDateFilter}
                   min={fromDateFilter || undefined}
                   max={todayDateValue}
@@ -175,23 +172,27 @@ export function ProformsListPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {isRefreshingResults ? (
-              <span className="app-chip">{t("pages.proformsList.loading")}</span>
-            ) : null}
-            <span className="app-chip app-chip-strong">
-              {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
-            </span>
-            <span className="app-chip">
-              {t("pages.proformsList.paginationSummary", {
-                start: startItem,
-                end: endItem,
-                total: totalCount,
-              })}
-            </span>
+          <div className="filter-page-size">
+              <label className="flex items-center gap-2 text-sm text-[var(--ip-text-soft)]">
+                <span>{t("pages.proformsList.perPage")}</span>
+                <select
+                  value={pageSize}
+                  onChange={(event) =>
+                    setPageSize(Number(event.target.value) as (typeof pageSizeOptions)[number])
+                  }
+                  className="app-input min-h-0 py-2"
+                >
+                  {pageSizeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </label>
           </div>
+          {isRefreshingResults ? <span className="app-chip" role="status">{t("pages.proformsList.loading")}</span> : null}
         </div>
-      </section>
+      </details>
 
       {feedback ? (
         <section className="app-card mb-6 p-4 sm:p-5">
@@ -230,59 +231,6 @@ export function ProformsListPage() {
         />
       ) : (
         <div className={`space-y-4 transition-opacity ${isRefreshingResults ? "opacity-70" : "opacity-100"}`}>
-          <section className="app-card flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-[var(--ip-text-soft)]">
-              {t("pages.proformsList.paginationSummary", {
-                start: startItem,
-                end: endItem,
-                total: totalCount,
-              })}
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label className="flex items-center gap-2 text-sm text-[var(--ip-text-soft)]">
-                <span>{t("pages.proformsList.perPage")}</span>
-                <select
-                  value={pageSize}
-                  onChange={(event) =>
-                    setPageSize(Number(event.target.value) as (typeof pageSizeOptions)[number])
-                  }
-                  className="app-input min-h-0 py-2"
-                >
-                  {pageSizeOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goToPreviousPage}
-                  disabled={isOnFirstPage}
-                  className="app-button-secondary"
-                >
-                  {t("pages.proformsList.previous")}
-                </button>
-
-                <span className="min-w-[110px] text-center text-sm text-[var(--ip-text-soft)]">
-                  {t("pages.proformsList.pageOf", { page: currentPage, totalPages })}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={goToNextPage}
-                  disabled={isOnLastPage}
-                  className="app-button-secondary"
-                >
-                  {t("pages.proformsList.next")}
-                </button>
-              </div>
-            </div>
-          </section>
-
           {filteredProforms.map((proform) => {
             const currencySymbol = getProformCurrencySymbol(proform.currency);
 
@@ -290,7 +238,7 @@ export function ProformsListPage() {
               <Link
                 key={proform.id}
                 to={`/app/proforms/${proform.id}`}
-                className="app-card block p-5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(23,59,122,0.16)] sm:p-6"
+                className="quotation-list-card app-card block p-5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(23,59,122,0.16)] sm:p-6"
               >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0">
@@ -328,7 +276,7 @@ export function ProformsListPage() {
                     </div>
                   </div>
 
-                  <div className="app-card-inset grid min-w-[220px] gap-2 p-4 text-sm">
+                  <div className="quotation-list-totals app-card-inset grid min-w-[220px] gap-2 p-4 text-sm">
                     <div className="flex items-center justify-between">
                       <span className="text-slate-500 dark:text-slate-400">
                         {t("common.finance.subtotal")}
@@ -364,6 +312,13 @@ export function ProformsListPage() {
           })}
         </div>
       )}
+      {hasLoadedAtLeastOnce ? (
+        <nav className="quotation-pagination" aria-label={i18n.resolvedLanguage?.startsWith("es") ? "Paginación de cotizaciones" : "Quotation pagination"}>
+          <button type="button" onClick={goToPreviousPage} disabled={isOnFirstPage || isRefreshingResults} className="app-button-secondary">{t("pages.proformsList.previous")}</button>
+          <p aria-live="polite">{t("pages.proformsList.paginationSummary", { start: startItem, end: endItem, total: totalCount })}</p>
+          <button type="button" onClick={goToNextPage} disabled={isOnLastPage || isRefreshingResults} className="app-button-secondary">{t("pages.proformsList.next")}</button>
+        </nav>
+      ) : null}
     </div>
   );
 }
